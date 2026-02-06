@@ -547,7 +547,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 									),
 								),
 								'additionalProperties' => array(
-									'type' => [ 'string', 'boolean', 'object', 'array' ],
+									'type' => [ 'string', 'boolean', 'object', 'array', 'number', 'integer' ],
 								),
 							),
 						),
@@ -573,7 +573,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 									),
 								),
 								'additionalProperties' => array(
-									'type' => [ 'string', 'boolean', 'object', 'array' ],
+									'type' => [ 'string', 'boolean', 'object', 'array', 'number', 'integer' ],
 								),
 							),
 						),
@@ -918,44 +918,100 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 					}
 				}
 
-				if ( ! $is_backend && ! empty( $args['custom_scripts'] ) ) {
+				if ( ! empty( $args['custom_scripts'] ) && ! $is_backend ) {
 					$custom_scripts = $args['custom_scripts'];
 
-					foreach ( $custom_scripts as $script ) {
-						if ( ! $script || ! is_array( $script ) || empty( $script['value'] ) ) {
-							continue;
+					// Refine custom scripts.
+					$custom_scripts = array_reduce(
+						$custom_scripts,
+						function ( $carry, $script ) {
+							// Skip if script is empty.
+							if ( ! $script || ! is_array( $script ) || empty( $script['value'] ) ) {
+								return $carry;
+							}
+
+							// Refine script type.
+							$script_type = $script['script_type'] ?? '';
+
+							// Legacy support for script_type.
+							if ( ! $script_type ) {
+								if ( $script['is_module'] ?? false ) {
+									$script_type = 'module';
+								} elseif ( ! empty( $script['handle'] ) ) {
+									$script_type = 'custom';
+								} else {
+									$script_type = 'default';
+								}
+
+								$script['script_type'] = $script_type;
+							}
+
+							// If custom type but no handle, change to default.
+							if ( 'custom' === $script_type && empty( $script['handle'] ) ) {
+								$script['script_type'] = 'default';
+							}
+
+							$carry[] = $script;
+
+							return $carry;
+						},
+						[]
+					);
+
+					$default_handle_scripts = array_filter(
+						$custom_scripts,
+						function ( $script ) {
+							return 'custom' !== $script['script_type'];
+						}
+					);
+
+					if ( $default_handle_scripts ) {
+						$dep_handles = array_reduce(
+							$default_handle_scripts,
+							function ( $carry, $script ) {
+								if ( 'module' === $script['script_type'] ) {
+									$carry['has_module'] = true;
+								} elseif ( ! empty( $script['deps'] ) ) {
+									$deps = explode( ',', $script['deps'] );
+									foreach ( $deps as $dep ) {
+										$dep = trim( $dep );
+										if ( ! $dep || in_array( $dep, $carry['deps'], true ) ) {
+											continue;
+										}
+
+										$carry['deps'][] = $dep;
+									}
+								}
+
+								return $carry;
+							},
+							[
+								'has_module' => false,
+								'deps'       => [],
+							]
+						);
+
+						if ( $dep_handles['has_module'] ) {
+							// Register the default handle for module scripts.
+							wp_register_script( $block_module_inline_handle, '', [], BOLDBLOCKS_CBB_VERSION, [ 'in_footer' => true ] );
 						}
 
-						$script_type = $script['script_type'] ?? '';
-						// Legacy support for script_type.
-						if ( ! $script_type ) {
-							if ( $script['is_module'] ?? false ) {
-								$script_type = 'module';
-							} elseif ( ! empty( $script['handle'] ) ) {
-								$script_type = 'custom';
-							} else {
-								$script_type = 'default';
-							}
+						if ( ! in_array( 'CBB_BLOCK_API', $dep_handles['deps'], true ) ) {
+							array_unshift( $dep_handles['deps'], 'CBB_BLOCK_API' );
 						}
-						$is_module = 'module' === $script_type;
-						$handle    = $is_module ? $block_module_inline_handle : $block_inline_handle;
+
+						// Register the default handle for inline scripts.
+						wp_register_script( $block_inline_handle, '', explode( ',', $this->refine_script_handle( implode( ',', $dep_handles['deps'] ), $is_backend ) ), BOLDBLOCKS_CBB_VERSION, [ 'in_footer' => true ] );
+					}
+
+					foreach ( $custom_scripts as $script ) {
+						$script_type = $script['script_type'];
 
 						// Determine if a custom handle should be used.
-						if ( 'custom' === $script_type && ! empty( $script['handle'] ) ) {
+						if ( 'custom' === $script_type ) {
 							$handle = $this->refine_script_handle( $script['handle'], $is_backend );
 						} else {
-							// Get dep handles.
-							$dep_handles = $script['deps'] ?? 'CBB_BLOCK_API';
-							if ( false === strpos( $dep_handles, 'CBB_BLOCK_API' ) ) {
-								if ( ! $dep_handles ) {
-									$dep_handles = 'CBB_BLOCK_API';
-								} else {
-									$dep_handles = 'CBB_BLOCK_API,' . $dep_handles;
-								}
-							}
-
-							// Register the default handle for module and inline scripts.
-							wp_register_script( $handle, '', explode( ',', $this->refine_script_handle( $dep_handles, $is_backend ) ), BOLDBLOCKS_CBB_VERSION, [ 'in_footer' => true ] );
+							$handle = 'module' === $script_type ? $block_module_inline_handle : $block_inline_handle;
 
 							// Add handle to view scripts and editor scripts if backend.
 							if ( ! in_array( $handle, $handles['view_script_handles'], true ) ) {
@@ -1174,6 +1230,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 				'blocks'         => $all_custom_blocks,
 				'variations'     => $this->the_plugin_instance->get_component( Variations::class )->get_all_variations(),
 				'variationNonce' => wp_create_nonce( 'cbb_variation_nonce' ),
+				'animations'     => $this->get_animated_blocks(),
 			];
 
 			// Get block name for current variation.
@@ -1937,7 +1994,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 			}
 
 			if ( $block_instance->block_type->supports['hideOnFrontend'] ?? false ) {
-				return null;
+				return '<!-- ' . esc_html( $block_instance->name ) . ' -->';
 			}
 
 			return $block_content;
@@ -2618,6 +2675,34 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 			$post    = $post_id ? get_post( $post_id ) : false;
 
 			return $post instanceof \WP_Post ? $post : false;
+		}
+
+		/**
+		 * Get animated blocks
+		 */
+		public function get_animated_blocks() {
+			return apply_filters(
+				'cbb_get_animated_blocks',
+				[
+					'core/heading',
+					'core/paragraph',
+					'core/image',
+					'core/button',
+					'core/buttons',
+					'core/list-item',
+					'core/list',
+					'core/group',
+					'core/columns',
+					'core/column',
+					'core/cover',
+					'core/media-text',
+					'core/post-title',
+					'core/post-excerpt',
+					'core/post-terms',
+					'core/readmore',
+					'boldblocks/svg-block',
+				]
+			);
 		}
 
 		/**

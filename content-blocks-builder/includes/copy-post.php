@@ -360,6 +360,9 @@ if ( ! class_exists( CopyPost::class ) ) :
 		 * @return bool True if the post type is in a list of supported psot types; false otherwise.
 		 */
 		protected function validate_post_type( $post_type, $post = null ) {
+			// Get all public post types.
+			$public_types = array_keys( get_post_types( [ 'public' => true ] ) );
+
 			/**
 			 * Fires when determining if the "Copy" row action should be made available.
 			 * Allows overriding supported post types.
@@ -369,13 +372,7 @@ if ( ! class_exists( CopyPost::class ) ) :
 			 */
 			$valid_post_types = apply_filters(
 				'cbb_copy_item_post_types',
-				[
-					'boldblocks_block',
-					'boldblocks_variation',
-					'boldblocks_pattern',
-					'post',
-					'page',
-				],
+				$public_types,
 				$post
 			);
 

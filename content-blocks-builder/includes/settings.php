@@ -25,6 +25,13 @@ if ( ! class_exists( Settings::class ) ) :
 		protected $core_blocks_version = '2.7.3';
 
 		/**
+		 * The plugin title
+		 *
+		 * @var string
+		 */
+		private $plugin_title = 'Content Blocks Builder';
+
+		/**
 		 * The script handle
 		 *
 		 * @var string
@@ -108,7 +115,7 @@ if ( ! class_exists( Settings::class ) ) :
 
 				?>
 				<div class="cbb-settings-header">
-					<h1><strong><?php esc_html_e( 'Content Blocks Builder', 'content-blocks-builder' ); ?></strong> <code><?php echo esc_html( $this->the_plugin_instance->get_plugin_version() ); ?></code></h1>
+					<h1><strong><?php echo esc_html( $this->plugin_title ); ?></strong> <code><?php echo esc_html( $this->the_plugin_instance->get_plugin_version() ); ?></code></h1>
 					<ul class="lelf-links">
 						<?php foreach ( $left_links as $link ) : ?>
 							<?php
@@ -133,14 +140,14 @@ if ( ! class_exists( Settings::class ) ) :
 
 			add_submenu_page(
 				$parent_slug,
-				'Content Blocks Builder',
+				$this->plugin_title,
 				__( 'Settings', 'content-blocks-builder' ),
 				'manage_options',
 				'cbb-settings',
 				function () {
 					?>
 					<div class="wrap">
-						<h2 class="screen-reader-text">Content Blocks Builder</h2>
+						<h2 class="screen-reader-text"><?php echo esc_html( $this->plugin_title ); ?></h2>
 						<div class="boldblocks-settings js-boldblocks-settings-root"></div>
 					</div>
 					<?php
@@ -177,8 +184,8 @@ if ( ! class_exists( Settings::class ) ) :
 					$this->script_handle,
 					'const CBBSettings=' . wp_json_encode(
 						[
-							'nonce'         => wp_create_nonce( 'cbb_purce_nonce' ),
-							'isPurgedCache' => $this->is_purged_cache ? 1 : 0,
+							'nonce'          => wp_create_nonce( 'cbb_purce_nonce' ),
+							'isPurgedCache'  => $this->is_purged_cache ? 1 : 0,
 							'variationNonce' => wp_create_nonce( 'cbb_variation_nonce' ),
 						]
 					),

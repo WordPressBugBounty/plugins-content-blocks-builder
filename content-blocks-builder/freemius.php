@@ -21,7 +21,7 @@ if ( !function_exists( 'cbb_fs' ) ) {
                 define( 'WP_FS__PRODUCT_11230_MULTISITE', true );
             }
             // Include Freemius SDK.
-            require_once dirname( __FILE__ ) . '/vendor/freemius/start.php';
+            require_once __DIR__ . '/vendor/freemius/start.php';
             $menu = array(
                 'slug'    => 'edit.php?post_type=boldblocks_block',
                 'account' => true,
@@ -88,6 +88,7 @@ if ( !function_exists( 'cbb_fs_custom_connect_message_on_update' ) ) {
         $freemius_link
     ) {
         return sprintf(
+            // translators: %s: the first name of the current user.
             __( 'Hey %1$s', 'content-blocks-builder' ) . ',<br>' . __( 'Thank you for using %2$s. We invite you to help the %2$s community by opting in to share some data about your usage of %2$s with us. This will help us make this plugin more compatible with your site and better at doing what you need it to. You can opt out at any time. And if you skip this, that\'s okay! %2$s will still work just fine.', 'content-blocks-builder' ),
             $user_first_name,
             '<b>' . $plugin_title . '</b>',

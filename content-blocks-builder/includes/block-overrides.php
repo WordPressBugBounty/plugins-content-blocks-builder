@@ -26,7 +26,7 @@ if ( ! class_exists( BlockOverrides::class ) ) :
 			'core/paragraph' => [ 'content' ],
 			'core/heading'   => [ 'content' ],
 			'core/button'    => [ 'text', 'url', 'linkTarget', 'rel' ],
-			'core/image'     => [ 'id', 'url', 'title', 'alt' ],
+			'core/image'     => [ 'id', 'url', 'title', 'alt', 'caption' ],
 		];
 
 		/**
@@ -356,6 +356,23 @@ if ( ! class_exists( BlockOverrides::class ) ) :
 				if ( function_exists( 'better_youtube_embed_block_render_block' ) ) {
 					// Merge with dynamic content.
 					$attributes = array_merge( $block_instance->attributes, $computed_attributes );
+
+					// Get caption from the markup if there is no binding value.
+					if ( ! isset( $computed_attributes['caption'] ) ) {
+						$block_reader = new \WP_HTML_Tag_Processor( $block_content );
+						if ( $block_reader->next_tag( 'figcaption' ) ) {
+							$caption = '';
+							while ( $block_reader->next_token() ) {
+								if ( '#text' === $block_reader->get_token_name() ) {
+									$caption .= $block_reader->get_modifiable_text();
+								}
+							}
+
+							if ( $caption ) {
+								$attributes['caption'] = $caption;
+							}
+						}
+					}
 
 					return better_youtube_embed_block_render_block( $attributes );
 				}

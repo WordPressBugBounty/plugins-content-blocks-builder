@@ -93,6 +93,12 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			// Build animations.
 			add_filter( 'render_block', [ $this, 'build_block_animations' ], 30, 3 );
 
+			// Render accordions.
+			add_filter( 'render_block_data', [ $this, 'render_accordion_block_data' ] );
+
+			// Render accordion item blocks.
+			add_filter( 'render_block', [ $this, 'render_accordion_item_block' ], 10, 3 );
+
 			// Render grid style for the query loop block.
 			add_filter( 'render_block_core/query', [ $this, 'render_query_loop_grid_style' ], 10, 3 );
 
@@ -316,10 +322,10 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			$visibility_style .= "@media(min-width:{$lg_breakpoint}px){.cbb-hidden-lg{display:none !important;}}";
 			$style            .= $visibility_style;
 
-			// Grid: Columns & gap.
-			$grid_style  = '.sm-cbb-grid-columns > *,.sm-cbb-grid-columns > * + *{margin:0}.sm-cbb-grid-columns{grid-template-columns:var(--cbb--grid-columns);}.sm-cbb-grid-rows{grid-template-rows:var(--cbb--grid-rows);}.sm-cbb-grid-gap-column{column-gap:var(--cbb--grid-gap-column);}.sm-cbb-grid-gap-row{row-gap:var(--cbb--grid-gap-row);}';
-			$grid_style .= "{$md_start}.md-cbb-grid-columns > * {margin:0}.md-cbb-grid-columns{grid-template-columns:var(--cbb--grid-columns);}.md-cbb-grid-rows{grid-template-rows:var(--cbb--grid-rows);}.md-cbb-grid-gap-column{column-gap:var(--cbb--grid-gap-column);}.md-cbb-grid-gap-row{row-gap:var(--cbb--grid-gap-row);}{$end}";
-			$grid_style .= "{$lg_start}.lg-cbb-grid-columns > * {margin:0}.lg-cbb-grid-columns{grid-template-columns:var(--cbb--grid-columns);}.lg-cbb-grid-rows{grid-template-rows:var(--cbb--grid-rows);}.lg-cbb-grid-gap-column{column-gap:var(--cbb--grid-gap-column);}.lg-cbb-grid-gap-row{row-gap:var(--cbb--grid-gap-row);}{$end}";
+			// Grid: Columns, rows, auto-rows, & gap.
+			$grid_style  = '.sm-cbb-grid-columns > *,.sm-cbb-grid-columns > * + *{margin:0}.sm-cbb-grid-columns{grid-template-columns:var(--cbb--grid-columns);}.sm-cbb-grid-rows{grid-template-rows:var(--cbb--grid-rows);}.sm-cbb-grid-auto-rows{grid-auto-rows:var(--cbb--grid-auto-rows);}.sm-cbb-grid-gap-column{column-gap:var(--cbb--grid-gap-column);}.sm-cbb-grid-gap-row{row-gap:var(--cbb--grid-gap-row);}';
+			$grid_style .= "{$md_start}.md-cbb-grid-columns > * {margin:0}.md-cbb-grid-columns{grid-template-columns:var(--cbb--grid-columns);}.md-cbb-grid-rows{grid-template-rows:var(--cbb--grid-rows);}.md-cbb-grid-auto-rows{grid-auto-rows:var(--cbb--grid-auto-rows);}.md-cbb-grid-gap-column{column-gap:var(--cbb--grid-gap-column);}.md-cbb-grid-gap-row{row-gap:var(--cbb--grid-gap-row);}{$end}";
+			$grid_style .= "{$lg_start}.lg-cbb-grid-columns > * {margin:0}.lg-cbb-grid-columns{grid-template-columns:var(--cbb--grid-columns);}.lg-cbb-grid-rows{grid-template-rows:var(--cbb--grid-rows);}.lg-cbb-grid-auto-rows{grid-auto-rows:var(--cbb--grid-auto-rows);}.lg-cbb-grid-gap-column{column-gap:var(--cbb--grid-gap-column);}.lg-cbb-grid-gap-row{row-gap:var(--cbb--grid-gap-row);}{$end}";
 			$style      .= $grid_style;
 
 			// Grid item: columnSpan & rowSpan.
@@ -329,9 +335,9 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			$style           .= $grid_item_style;
 
 			// Accordion gap.
-			$accordion_gap_style  = '.sm-cbb-accordion-gap{display:flex;flex-direction:column;gap:var(--cbb--accordion-gap);}.sm-cbb-a-has-border > .is-accordion-item{border-top:var(--cbb--item-border-top);}.sm-cbb-a-no-border > .is-accordion-item{border-top:0;}';
-			$accordion_gap_style .= "{$md_start}.md-cbb-accordion-gap{display:flex;flex-direction:column;gap:var(--cbb--accordion-gap);}.md-cbb-a-has-border > .is-accordion-item{border-top:var(--cbb--item-border-top);}.md-cbb-a-no-border > .is-accordion-item{border-top:0;}{$end}";
-			$accordion_gap_style .= "{$lg_start}.lg-cbb-accordion-gap{display:flex;flex-direction:column;gap:var(--cbb--accordion-gap);}.lg-cbb-a-has-border > .is-accordion-item{border-top:var(--cbb--item-border-top);}.lg-cbb-a-no-border > .is-accordion-item{border-top:0;}{$end}";
+			$accordion_gap_style  = '.sm-cbb-accordion-gap{display:flex;flex-direction:column;gap:var(--cbb--accordion-gap);}.sm-cbb-a-has-border > .is-accordion-item{border-top:var(--cbb--ab-top);}.sm-cbb-a-no-border > .is-accordion-item{border-top:0;}';
+			$accordion_gap_style .= "{$md_start}.md-cbb-accordion-gap{display:flex;flex-direction:column;gap:var(--cbb--accordion-gap);}.md-cbb-a-has-border > .is-accordion-item{border-top:var(--cbb--ab-top);}.md-cbb-a-no-border > .is-accordion-item{border-top:0;}{$end}";
+			$accordion_gap_style .= "{$lg_start}.lg-cbb-accordion-gap{display:flex;flex-direction:column;gap:var(--cbb--accordion-gap);}.lg-cbb-a-has-border > .is-accordion-item{border-top:var(--cbb--ab-top);}.lg-cbb-a-no-border > .is-accordion-item{border-top:0;}{$end}";
 			$style               .= $accordion_gap_style;
 
 			// Accordion padding.
@@ -493,6 +499,11 @@ if ( ! class_exists( CustomStyle::class ) ) :
 					'group'                       => 'grid',
 					'layout_type'                 => 'grid',
 				],
+				'autoRows'          => [
+					'func_build_responsive_style' => [ $this, 'build_auto_rows_style' ],
+					'group'                       => 'grid',
+					'layout_type'                 => 'grid',
+				],
 				'gap'               => [
 					'func_build_responsive_style' => [ $this, 'build_gap_style' ],
 					'group'                       => 'grid',
@@ -521,6 +532,18 @@ if ( ! class_exists( CustomStyle::class ) ) :
 					'setting_name'                => 'padding',
 					'layout_type'                 => 'accordion',
 				],
+				'accordionBorder'   => [
+					'func_build_style' => [ $this, 'build_accordion_border_style' ],
+					'group'            => 'accordion',
+					'setting_name'     => 'border',
+					'layout_type'      => 'accordion',
+				],
+				'accordionRadius'   => [
+					'func_build_style' => [ $this, 'build_accordion_radius_style' ],
+					'group'            => 'accordion',
+					'setting_name'     => 'radius',
+					'layout_type'      => 'accordion',
+				],
 				'stickyOffset'      => [
 					'func_build_responsive_style' => [ $this, 'build_sticky_offset_style' ],
 					'group'                       => 'sticky',
@@ -538,7 +561,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 					continue;
 				}
 
-				if ( ! in_array( $feature, [ 'border', 'hidden', 'accordionGap', 'accordionPadding' ], true ) && 'accordion' === $block_layout ) {
+				if ( ! in_array( $feature, [ 'border', 'hidden', 'accordionGap', 'accordionPadding', 'accordionBorder', 'accordionRadius' ], true ) && 'accordion' === $block_layout ) {
 					continue;
 				}
 
@@ -585,6 +608,12 @@ if ( ! class_exists( CustomStyle::class ) ) :
 
 				if ( \is_callable( $args['func_build_responsive_style'] ?? '' ) && $this->is_valid_responsive_value( $args['setting_value'] ) ) {
 					$this->build_responsive_style( $args, $responsive_style_array, $classes );
+				}
+			}
+
+			if ( $style_array ) {
+				foreach ( $style_array as $item_style ) {
+					$style .= $item_style;
 				}
 			}
 
@@ -646,24 +675,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			}
 
 			// Build style.
-			$feature_styles = $func_build_style( $args, $style_array, $classes );
-
-			if ( ! $feature_styles ) {
-				return $return_value;
-			}
-
-			$keys  = [];
-			$style = '';
-			foreach ( $feature_styles as $attr_key => $attr_value ) {
-				$style .= "{$attr_key}:{$attr_value};";
-
-				if ( ! in_array( $attr_key, $keys, true ) ) {
-					$keys[]    = $attr_key;
-					$classes[] = str_replace( '--cbb--', 'cbb-', $attr_key );
-				}
-			}
-
-			return $style ? $style : $return_value;
+			return $func_build_style( $args, $style_array, $classes );
 		}
 
 		/**
@@ -1167,8 +1179,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		 * @return array
 		 */
 		private function build_hidden_style( $args, &$style_array, &$classes ) {
-			$style_array = [];
-			$value       = $args['value'] ?? null;
+			$value = $args['value'] ?? null;
 			if ( ! empty( $value ) && is_array( $value ) ) {
 				foreach ( $value as $breakpoint ) {
 					$class = "cbb-hidden-{$breakpoint}";
@@ -1177,8 +1188,6 @@ if ( ! class_exists( CustomStyle::class ) ) :
 					}
 				}
 			}
-
-			return $style_array;
 		}
 
 		/**
@@ -1208,6 +1217,22 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			$value       = $args['value'] ?? null;
 			if ( $this->is_valid_value( $value ) ) {
 				$style_array['--cbb--grid-rows'] = $value;
+			}
+
+			return $style_array;
+		}
+
+		/**
+		 * Build style for grid auto rows
+		 *
+		 * @param array $args
+		 * @return string
+		 */
+		private function build_auto_rows_style( $args ) {
+			$style_array = [];
+			$value       = $args['value'] ?? null;
+			if ( $this->is_valid_value( $value ) ) {
+				$style_array['--cbb--grid-auto-rows'] = $value;
 			}
 
 			return $style_array;
@@ -1307,7 +1332,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			$style_array = [];
 			$value       = $args['value'];
 			if ( $this->is_valid_value( $value ) ) {
-				$style_array['--cbb--accordion-gap'] = $value;
+				$style_array['--cbb--accordion-gap'] = $this->get_spacing_value( $value );
 			}
 
 			return $style_array;
@@ -1325,7 +1350,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			$setting_values = $args['setting_values'];
 			if ( $this->is_valid_value( $setting_values ) && is_array( $setting_values ) ) {
 				foreach ( $setting_values as $breakpoint => $value ) {
-					if ( absint( $value ) > 0 ) {
+					if ( strpos( $value, 'var:preset|spacing|' ) !== false || absint( $value ) > 0 ) {
 						$classes[] = "{$breakpoint}-cbb-a-has-border";
 					} else {
 						$classes[] = "{$breakpoint}-cbb-a-no-border";
@@ -1350,13 +1375,82 @@ if ( ! class_exists( CustomStyle::class ) ) :
 				if ( ! $this->is_valid_value( $x ) ) {
 					$x = '1.25rem';
 				}
+				$x = $this->get_spacing_value( $x );
 
 				$y = $value['y'] ?? null;
 				if ( ! $this->is_valid_value( $y ) ) {
 					$y = '1rem';
 				}
+				$y = $this->get_spacing_value( $y );
 
 				$style_array['--cbb--accordion-padding'] = "{$y} {$x}";
+			}
+
+			return $style_array;
+		}
+
+		/**
+		 * Build style for accordion border
+		 *
+		 * @param array $args
+		 * @return string
+		 */
+		private function build_accordion_border_style( $args, &$style_array ) {
+			$value = $args['value'] ?? null;
+			if ( $value && is_array( $value ) ) {
+				if ( ( $value['top'] ?? false ) || ( $value['right'] ?? false ) || ( $value['bottom'] ?? false ) || ( $value['left'] ?? false ) ) {
+					$border_styles = $this->build_border_style( $args );
+				} else {
+					$border_styles = $this->build_border_style(
+						[
+							'value' => [
+								'top'    => $value,
+								'right'  => $value,
+								'bottom' => $value,
+								'left'   => $value,
+							],
+						]
+					);
+				}
+
+				if ( $border_styles ) {
+					$border_style = implode(
+						';',
+						array_map(
+							function ( $attr_key ) use ( $border_styles ) {
+								return "{$attr_key}:{$border_styles[ $attr_key ]}";
+							},
+							array_keys( $border_styles )
+						)
+					);
+
+					$style_array[] = "{$args['selector']}{{$border_style};}";
+				}
+			}
+
+			return $style_array;
+		}
+
+		/**
+		 * Build style for accordion radius
+		 *
+		 * @param array $args
+		 * @return string
+		 */
+		private function build_accordion_radius_style( $args, &$style_array ) {
+			$value = $args['value'] ?? null;
+			if ( $value ) {
+				if ( is_array( $value ) ) {
+					$top_left     = $value['topLeft'] ?? 0;
+					$top_right    = $value['topRight'] ?? 0;
+					$bottom_right = $value['bottomRight'] ?? 0;
+					$bottom_left  = $value['bottomLeft'] ?? 0;
+
+					$css_value = "{$top_left} {$top_right} {$bottom_right} {$bottom_left}";
+				} elseif ( is_string( $value ) ) {
+					$css_value = $value;
+				}
+				$style_array[] = "{$args['selector']}{--cbb--border-radius:{$css_value};}";
 			}
 
 			return $style_array;
@@ -1911,6 +2005,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 				$animation_object['multipleTimes'] = $block['attrs']['boldblocks']['animateMultipleTimes'] ?? false;
 
 				$block_content = $this->add_data_to_block( $block_content, 'data-reveal-animation', esc_attr( wp_json_encode( $animation_object ) ) );
+				$block_content = $this->add_class_to_block( $block_content, 'animate__waiting' );
 			}
 
 			return $block_content;
@@ -2133,6 +2228,102 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		}
 
 		/**
+		 * Render accordions block data
+		 *
+		 * @param array $parsed_block
+		 * @return array
+		 */
+		public function render_accordion_block_data( $parsed_block ) {
+			$block_type = \WP_Block_Type_Registry::get_instance()->get_registered( $parsed_block['blockName'] );
+
+			if ( ! $block_type ) {
+				return $parsed_block;
+			}
+
+			$layout_type = $block_type->supports['layoutType'] ?? '';
+			if ( ! in_array( $layout_type, [ 'accordion', 'accordionItem' ], true ) ) {
+				return $parsed_block;
+			}
+
+			static $accordion_counter = 0;
+			static $accordion_id      = '';
+			static $item_index        = [];
+
+			if ( 'accordion' === $layout_type ) {
+				++$accordion_counter;
+				$processor = new \WP_HTML_Tag_Processor( $parsed_block['innerHTML'] ?? '' );
+
+				$accordion_id = '';
+				if ( $processor->next_tag() ) {
+					$accordion_id = $processor->get_attribute( 'id' );
+				}
+
+				if ( ! $accordion_id ) {
+					$accordion_id = 'accordion-' . $accordion_counter;
+				}
+			} elseif ( 'accordionItem' === $layout_type ) {
+				if ( ! isset( $item_index[ $accordion_id ] ) ) {
+					$item_index[ $accordion_id ] = 1;
+				} else {
+					++$item_index[ $accordion_id ];
+				}
+
+				$parsed_block['attrs']['boldblocks']['accordionItem']['block_id'] = $accordion_id . '-item-' . $item_index[ $accordion_id ];
+			}
+
+			return $parsed_block;
+		}
+
+		/**
+		 * Render accordion item blocks
+		 *
+		 * @param string   $block_content
+		 * @param array    $block
+		 * @param WP_Block $block_instance
+		 * @return string
+		 */
+		public function render_accordion_item_block( $block_content, $block, $block_instance ) {
+			// Ignore admin side.
+			if ( is_admin() ) {
+				return $block_content;
+			}
+
+			// Bail if it is not an accordion item block.
+			if ( 'accordionItem' !== ( $block_instance->block_type->supports['layoutType'] ?? '' ) ) {
+				return $block_content;
+			}
+
+			$block_id          = $block['attrs']['boldblocks']['accordionItem']['block_id'] ?? '';
+			$block_id_selector = '#' . $block_id;
+
+			if ( $block_id ) {
+				$processor = new \WP_HTML_Tag_Processor( $block_content );
+
+				while ( $processor->next_tag() ) {
+					$tag_class = $processor->get_attribute( 'class' );
+					if ( ! $tag_class ) {
+						continue;
+					}
+
+					if ( strpos( $tag_class, 'accordion-header' ) !== false ) {
+						$processor->set_attribute( 'data-toggle-target', $block_id_selector );
+						$processor->set_attribute( 'aria-controls', $block_id );
+					} elseif ( strpos( $tag_class, 'accordion-link' ) !== false ) {
+						$processor->set_attribute( 'href', $block_id_selector );
+					} elseif ( strpos( $tag_class, 'accordion-collapse' ) !== false ) {
+						$processor->set_attribute( 'id', $block_id );
+						$processor->set_attribute( 'role', 'region' );
+						break;
+					}
+				}
+
+				$block_content = $processor->get_updated_html();
+			}
+
+			return $block_content;
+		}
+
+		/**
 		 * Render grid style for the query loop's grid layout
 		 *
 		 * @param string   $block_content
@@ -2309,6 +2500,44 @@ if ( ! class_exists( CustomStyle::class ) ) :
 							$selector          = $args['selector'];
 							$breakpoints       = $args['breakpoints'] ?? [];
 							$style             = "{$selector}{grid-template-rows:var(--cbb--grid--rows);}";
+
+							foreach ( $responsive_styles as $breakpoint => $attribute_array ) {
+								$media_query = $breakpoints[ $breakpoint ]['minQuery'] ?? '';
+								if ( $media_query ) {
+									$style = \str_replace( '##CONTENT##', $style, $media_query );
+								}
+
+								break;
+							}
+
+							return $style;
+						},
+					]
+				)
+			);
+
+			// Auto rows style.
+			$style .= $this->build_query_loop_responsive_style(
+				array_merge(
+					$args,
+					[
+						'setting_value'               => $data['autoRows'] ?? null,
+						'func_build_responsive_style' => function ( $args ) {
+							$style_array = [];
+							$value       = $args['value'];
+							if ( $value ) {
+								$style_array = [
+									'--cbb--grid--auto-rows' => $value,
+								];
+							}
+
+							return $style_array;
+						},
+						'func_build_dependent_style'  => function ( $args ) {
+							$responsive_styles = $args['responsive_styles'] ?? [];
+							$selector          = $args['selector'];
+							$breakpoints       = $args['breakpoints'] ?? [];
+							$style             = "{$selector}{grid-auto-rows:var(--cbb--grid--auto-rows);}";
 
 							foreach ( $responsive_styles as $breakpoint => $attribute_array ) {
 								$media_query = $breakpoints[ $breakpoint ]['minQuery'] ?? '';
@@ -2871,7 +3100,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 						if ($dataset['slidesPerView'] > 1 && ($first_breakpoint['slidesPerGroup'] ?? 0)) {
 							$dataset['slidesPerGroup'] = $first_breakpoint['slidesPerGroup'];
 						}
-						if ( $first_breakpoint['spaceBetween'] ) {
+						if ( ! empty( $first_breakpoint['spaceBetween'] ) ) {
 							$dataset['spaceBetween'] = $first_breakpoint['spaceBetween'];
 						}
 
@@ -3690,7 +3919,20 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		 */
 		public function refine_custom_value( $code, $tokens = [], $type = 'CSS' ) {
 			// Remove tags.
-			// $code = preg_replace( '/(<([\w-]+)>)/mi', '', $code );
+			if ( 'CSS' === $type ) {
+				$unsafe_tags = [ 'script', 'style', 'iframe', 'object', 'embed', 'img', 'video', 'audio', 'math', 'form' ];
+
+				// Build a regex pattern that matches:
+				// 1. <tag ...> ... </tag>  (full tag with content)
+				// 2. <tag ... /> or <tag ...> (self-closing or empty).
+				$pattern = sprintf(
+					'/<(%s)\b[^>]*>(?:.*?<\/\1\s*>)?/is',
+					implode( '|', $unsafe_tags )
+				);
+
+				// Remove all unsafe tags in one go.
+				$code = preg_replace( $pattern, '', $code );
+			}
 
 			// Replace breakpoint tokens.
 			$breakpoints = $this->get_breakpoints();

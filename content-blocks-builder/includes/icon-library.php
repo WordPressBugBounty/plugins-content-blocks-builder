@@ -68,7 +68,7 @@ if ( ! class_exists( IconLibrary::class ) ) :
 			$media_svg_images = $this->query_svg_images();
 
 			if ( $media_svg_images ) {
-				$icons = $media_svg_images + $icons;
+				$icons = array_merge( $media_svg_images, $icons );
 			}
 
 			wp_send_json(

@@ -124,8 +124,10 @@ if ( ! class_exists( Variations::class ) ) :
 					'show_in_menu'      => 'edit.php?post_type=boldblocks_block',
 					'show_in_admin_bar' => false,
 					'capabilities'      => array(
-						'create_posts' => 'do_not_allow',
-						'edit_posts'   => 'manage_options',
+						'create_posts'      => 'do_not_allow',
+						'edit_posts'        => 'manage_options',
+						'edit_others_posts' => 'manage_options',
+						'delete_posts'      => 'manage_options',
 					),
 					'map_meta_cap'      => true,
 				],
@@ -376,7 +378,7 @@ if ( ! class_exists( Variations::class ) ) :
 			$custom_style_handler = $this->the_plugin_instance->get_component( CustomStyle::class );
 
 			$variation_posts = array_map(
-				function( $item ) use ( $custom_style_handler ) {
+				function ( $item ) use ( $custom_style_handler ) {
 					$variation_name  = get_post_meta( $item->ID, 'boldblocks_variation_name', true );
 					$variation_class = 'is-style-' . str_replace( '/', '-', $variation_name );
 
@@ -393,14 +395,14 @@ if ( ! class_exists( Variations::class ) ) :
 						'postContent'        => $item->post_content,
 						'description'        => get_post_meta( $item->ID, 'boldblocks_variation_description', true ),
 						'blockIcon'          => get_post_meta( $item->ID, 'boldblocks_variation_icon', true ),
-						'isDefault'          => ! ! get_post_meta( $item->ID, 'boldblocks_variation_is_default', true ),
-						'isTransformable'    => ! ! get_post_meta( $item->ID, 'boldblocks_variation_is_transformable', true ),
-						'hideFromInserter'   => ! ! get_post_meta( $item->ID, 'boldblocks_variation_hide_from_inserter', true ),
+						'isDefault'          => (bool) get_post_meta( $item->ID, 'boldblocks_variation_is_default', true ),
+						'isTransformable'    => (bool) get_post_meta( $item->ID, 'boldblocks_variation_is_transformable', true ),
+						'hideFromInserter'   => (bool) get_post_meta( $item->ID, 'boldblocks_variation_hide_from_inserter', true ),
 						'variationData'      => get_post_meta( $item->ID, 'boldblocks_variation_data', true ),
 						'dependentBlocks'    => get_post_meta( $item->ID, 'boldblocks_variation_dependent_blocks', true ),
 						'variationClass'     => $variation_class,
 						'custom_style'       => $custom_style,
-						'enable_block_style' => ! ! get_post_meta( $item->ID, 'boldblocks_variation_enable_style', true ),
+						'enable_block_style' => (bool) get_post_meta( $item->ID, 'boldblocks_variation_enable_style', true ),
 					];
 				},
 				$raw_posts
@@ -598,7 +600,6 @@ if ( ! class_exists( Variations::class ) ) :
 						break;
 				}
 			}
-
 		}
 
 		/**

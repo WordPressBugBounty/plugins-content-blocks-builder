@@ -1,11 +1,11 @@
-=== Content Blocks Builder - Create blocks, repeater blocks with carousel, grid, accordion, popup layouts ===
+=== Content Blocks Builder - Create blocks, repeater blocks with carousel, grid, popup layouts ===
 Contributors: Mr2P, freemius
 Donate link:       https://contentblocksbuilder.com?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=CBB+Donate
-Tags:              blocks, block builder, carousel, grid, popup
+Tags:              blocks, Gutenberg, carousel, grid, popup
 Requires PHP:      7.4
 Requires at least: 6.6
-Tested up to:      6.8
-Stable tag:        2.8.3
+Tested up to:      6.9
+Stable tag:        2.8.8
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,7 +45,7 @@ The ultimate goal of CBB is to help you build complex layouts — all with core 
  - **Responsive grid layouts**: Perfect for creating equal column grid, mosaic grid, bento grid, posts grid, grid of features or other repeating content, etc. CBB provides the easiest but most flexible and robost grid layout based on CSS Grid layout. You can customize template columns, grid gaps, size, and location for each grid item.
  - **Accordion layouts**: Good for creating FAQ page, navigations, long features or specications.
  - **Blog page design, magazine layout, post grid, post carousel**; Work with any post types.
- - **Modal, off-canvas, popover, toggle content**: Great for creating popups, notification bars, toggle menu, toggle search box, hamburger menu, popover, show/hide content, etc. **[CBB Pro](https://contentblocksbuilder.com/pro/?utm_source=wp.org&utm_campaign=CBB+Upgrade&utm_medium=link&utm_content=CBB)** allows you to add a custom entrance animation effect, delay to appear of the blocks, and save the closed state of blocks.
+ - **Modal, off-canvas, popover, toggle content**: Great for creating popups, notification bars, toggle menu, toggle search box, hamburger menu, popover, show/hide content, etc. **[CBB Pro](https://contentblocksbuilder.com/pro/?utm_source=wp.org&utm_campaign=CBB+Upgrade&utm_medium=link&utm_content=CBB)** allows you to add a custom entrance animation effect, control when popups appear with delay options, trigger them on scroll to elements or exit intent, and remember when a popup has been closed.
  - **Sticky content**: Great for fixed/sticky header, footer, floating elements, sticky sidebar. **[CBB Pro](https://contentblocksbuilder.com/pro/?utm_source=wp.org&utm_campaign=CBB+Upgrade&utm_medium=link&utm_content=CBB)** enables you to style blocks based on their stuck state and make blocks sticky only when scrolling up.
  - **[[CBB Pro](https://contentblocksbuilder.com/pro/?utm_source=wp.org&utm_campaign=CBB+Upgrade&utm_medium=link&utm_content=CBB)] Backgound effect**: Add parallax, infinite scrolling, and zooming effect to image easily. Perfect for hero section designs.
  - **[[CBB Pro](https://contentblocksbuilder.com/pro/?utm_source=wp.org&utm_campaign=CBB+Upgrade&utm_medium=link&utm_content=CBB)] Reveal animations**: Add stunning effects to blocks when they appear on the viewport the first time.
@@ -180,13 +180,17 @@ We're still recording video tutorials, so please [subscribe to our YouTube chann
 In short, the professional version adds following advanced features to your content such as:
 
  - **Custom CSS**: Adjusts layout and style easily right in the inspector settings.
+ - **Enqueue external JS/CSS** and **add custom JS/CSS** to blocks. This powerful feature lets you create blocks with any style or interactive effect, just like on CodePen.io. You write the JS/CSS, and CBB takes care of the rest behind the scenes.
  - **Premium background effects**: Includes parallax, infinite scrolling, and zooming effect to background image.
  - **Premium carousel features**: Adds entrance animations, advanced effects, an effect builder, customized pagination, navigation, etc.
- - **Premium toggle content features**: Enhancements for modal, off-canvas, and popover content with custom entrance animations, delay time, and closed state saving.
+ - **Premium toggle content features**: Enhancements for modal, off-canvas, and popover content with custom entrance animations, delay time, trigger on scroll, exit intent, and closed state saving.
  - **Premium sticky content features**: Detects stuck state and adds the ability to make blocks sticky only on scrolling up.
- - **Enqueue external JS/CSS** and **add custom JS/CSS** to blocks.
  - **Add custom CSS** to variations.
  - **Reveal/entrance animations**: Adds stunning effects to blocks when they first appear in the viewport.
+
+Check out this video tutorial to learn how to create a Google Map block and see how Content Blocks Builder (CBB Pro) helps you build powerful, custom Gutenberg blocks — without writing any React or PHP code.
+
+[youtube https://youtu.be/hhH3bHrh_4U]
 
 Watch more video tutorials to see how the Pro version can help you build advanced features for your sites:
 
@@ -215,7 +219,8 @@ Please check out my other plugins if you're interested:
  - **[Counting Number Block](https://wordpress.org/plugins/counting-number-block)** - A block to display numbers with a counting effect
  - **[Better YouTube Embed Block](https://wordpress.org/plugins/better-youtube-embed-block)** - A block to solve the performance issue with embedded YouTube videos. It can also embed multiple videos and playlists.
 
-The plugin is developed using @wordpress/scripts.
+The plugin is developed using @wordpress/scripts. The source code is available in the trunk branch.
+The pattern, block, and variation library is hosted at [https://boldpatterns.net](https://boldpatterns.net?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=CBB).
 
 == Installation ==
 
@@ -227,7 +232,7 @@ Please see the video tutorial to install it from your site dashboard:
 
 = How to install it manually =
 
-1. Upload the plugin files to the `/wp-content/plugins/content-blocks-builder` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 
 == Frequently Asked Questions ==
@@ -314,13 +319,16 @@ Learn more about this error: [Unexpected or Invalid Content](https://wordpress.o
 
 == Changelog ==
 
-= 2.8.3 =
-*Release Date - 22 September 2025*
+= 2.8.8 =
+*Release Date - 02 February 2026*
 
-* Improved – [CBB Pro] Adjusted the minimum and maximum values for the carousel coverflow stretch setting.
-* Fixed    – Carousel now correctly shows a single item on mobile when the setting is enable.
-* Improved – The play/pause button is now hidden when the carousel is locked.
-* Improved – Added a clearer help message for the carousel’s infinite loop mode.
-* Improved - Accessibility for collpases, modals, off-canvases, carousels, and background link to post.
+* Changed  - Removed the default trigger selectors (js-toggle-modal, js-toggle-collapse) from the toggle content component.
+* Fixed    - Resolved an accessibility issue where aria-hidden was set before focus was moved out of the modal.
+* Fixed    – The styles and scripts of a block were not rendered on the frontend when the block was marked as hidden on the frontend.
+* Improved - Added image's caption to the block binding in WP 6.9
+* Improved - Rendered the static caption for the Better YouTube Embed Block when used inside override blocks and no source binding is set.
+* Added    – Support for copying all posts for any public post type
+* Added    - Range control to Custom Attributes
+* Improved - Allowed inputting min,max,step properties to the range and number attributes
 
 [View all changelog](https://contentblocksbuilder.com/changelog?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=Changelog)
