@@ -6,7 +6,7 @@
  * Description:       Create blocks by wrapping other blocks into containers or repeaters to create layouts like grid, carousel, popup, accordion — all in the Block Editor. Fast. Easy. Bloat-free.
  * Requires at least: 6.6
  * Requires PHP:      7.4
- * Version:           2.8.8
+ * Version:           2.8.9
  * Author:            Phi Phan
  * Author URI:        https://contentblocksbuilder.com?utm_source=CBB&utm_campaign=CBB+visit+site&utm_medium=link&utm_content=Author+URI
  * License:           GPL-3.0
@@ -35,7 +35,7 @@ if ( !class_exists( ContentBlocksBuilder::class ) ) {
          *
          * @var String
          */
-        public $version = '2.8.8';
+        public $version = '2.8.9';
 
         /**
          * Components

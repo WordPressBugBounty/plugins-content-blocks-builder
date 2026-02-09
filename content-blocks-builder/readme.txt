@@ -5,11 +5,11 @@ Tags:              blocks, Gutenberg, carousel, grid, popup
 Requires PHP:      7.4
 Requires at least: 6.6
 Tested up to:      6.9
-Stable tag:        2.8.8
+Stable tag:        2.8.9
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
-Group core blocks into containers or repeaters to create layouts like grid, carousel, popup, accordion — all in the Block Editor. Fast. Easy. Bloat-free.
+Group core blocks into containers or repeaters to create layouts like grid, carousel, popup, accordion all in the Block Editor. Fast. Easy.
 
 == Description ==
 
@@ -319,16 +319,16 @@ Learn more about this error: [Unexpected or Invalid Content](https://wordpress.o
 
 == Changelog ==
 
-= 2.8.8 =
-*Release Date - 02 February 2026*
+= 2.8.9 =
+*Release Date - 09 February 2026*
 
-* Changed  - Removed the default trigger selectors (js-toggle-modal, js-toggle-collapse) from the toggle content component.
-* Fixed    - Resolved an accessibility issue where aria-hidden was set before focus was moved out of the modal.
-* Fixed    – The styles and scripts of a block were not rendered on the frontend when the block was marked as hidden on the frontend.
-* Improved - Added image's caption to the block binding in WP 6.9
-* Improved - Rendered the static caption for the Better YouTube Embed Block when used inside override blocks and no source binding is set.
-* Added    – Support for copying all posts for any public post type
-* Added    - Range control to Custom Attributes
-* Improved - Allowed inputting min,max,step properties to the range and number attributes
+* Added    - Fraction pagination for carousel layouts
+* Improved - UI for the block supports panels to improve usability
+* Improved - UI for extra properties on select, number, and range custom attributes
+* Improved - Refactored the code to better handle synced override blocks
+* Improved - [CBB Pro] Added JSON editor support for JSON-type custom attributes
+* Improved - Added simple Markdown support (h1–h3, links, lists, bold, italic, code) for custom attribute labels and help text
+* Improved - Show a preview instead of a JSON string for read-only image and video attributes
+* Improved - Upgraded SwiperJS to version 12.1.0 for better performance and access to new features
 
 [View all changelog](https://contentblocksbuilder.com/changelog?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=Changelog)

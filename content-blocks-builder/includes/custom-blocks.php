@@ -547,7 +547,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 									),
 								),
 								'additionalProperties' => array(
-									'type' => [ 'string', 'boolean', 'object', 'array', 'number', 'integer' ],
+									'type' => [ 'integer', 'number', 'boolean', 'string', 'object', 'array' ], // The order of data type matters.
 								),
 							),
 						),
@@ -573,7 +573,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 									),
 								),
 								'additionalProperties' => array(
-									'type' => [ 'string', 'boolean', 'object', 'array', 'number', 'integer' ],
+									'type' => [ 'integer', 'number', 'boolean', 'string', 'object', 'array' ],
 								),
 							),
 						),
@@ -1170,6 +1170,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 			if ( $screen && $screen->is_block_editor ) {
 				wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
 				wp_enqueue_code_editor( array( 'type' => 'javascript' ) );
+				wp_enqueue_code_editor( array( 'type' => 'application/json' ) );
 			}
 		}
 
