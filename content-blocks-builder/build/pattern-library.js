@@ -302,6 +302,16 @@
     }
   }
 
+  &.is-2-columns,
+  &.is-3-columns,
+  &.is-4-columns {
+    .group-control__body {
+      > * {
+        width: auto;
+      }
+    }
+  }
+
   &.is-2-columns {
     .group-control__body {
       > * {
@@ -338,7 +348,7 @@
     }
   }
 `,Zn=tt(x.Flex)`
-  padding-bottom: 8px;
+  margin-bottom: 8px;
 
   .label-control {
     margin-bottom: 0 !important;
@@ -352,7 +362,7 @@
     flex: 1 0 auto;
     margin: 0 !important;
   }
-`;var Qn=(0,on.jsx)(sn.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,on.jsx)(sn.Path,{d:"M10 17.389H8.444A5.194 5.194 0 1 1 8.444 7H10v1.5H8.444a3.694 3.694 0 0 0 0 7.389H10v1.5ZM14 7h1.556a5.194 5.194 0 0 1 0 10.39H14v-1.5h1.556a3.694 3.694 0 0 0 0-7.39H14V7Zm-4.5 6h5v-1.5h-5V13Z"})}),er=(0,on.jsx)(sn.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,on.jsx)(sn.Path,{d:"M17.031 4.703 15.576 4l-1.56 3H14v.03l-2.324 4.47H9.5V13h1.396l-1.502 2.889h-.95a3.694 3.694 0 0 1 0-7.389H10V7H8.444a5.194 5.194 0 1 0 0 10.389h.17L7.5 19.53l1.416.719L15.049 8.5h.507a3.694 3.694 0 0 1 0 7.39H14v1.5h1.556a5.194 5.194 0 0 0 .273-10.383l1.202-2.304Z"})});function tr({isLinked:e,...t}){const n=e?(0,b.__)("Unlink Sides","content-blocks-builder"):(0,b.__)("Link Sides","content-blocks-builder");return(0,on.jsx)(x.Tooltip,{text:n,children:(0,on.jsx)("span",{children:(0,on.jsx)(x.Button,{...t,className:"component-group-control__linked-button",variant:e?"primary":"secondary",size:"small",icon:e?Qn:er,iconSize:16,"aria-label":n})})})}var nr=n(774),rr=n.n(nr);const ir=({values:e,fields:t})=>{const n=t.map(({name:t})=>{var n;return null!==(n=e[t])&&void 0!==n?n:void 0});return(r=n.filter(e=>e)).sort((e,t)=>(0,N.isObject)(e)?r.filter(t=>rr()(t,e)).length-r.filter(e=>rr()(e,t)).length:r.filter(t=>t===e).length-r.filter(e=>e===t).length).pop();var r},ar=({values:e,fields:t,renderControl:n,onChange:r,normalizeValue:i,...a})=>t.map(o=>{var s;const{name:l}=o;return(0,on.jsx)(y.Fragment,{children:n({value:null!==(s=e[l])&&void 0!==s?s:void 0,onChange:(c=l,t=>{t=i({side:c,value:t}),r({...e,[c]:t})}),fields:t,values:e,...o,...a})},`group-control-${l}`);var c}),or=({values:e,fields:t,renderControl:n,renderAllControl:r=null,onChange:i,normalizeValue:a,...o})=>(r||(r=n),r({value:ir({values:e,fields:t}),fields:t,values:e,onChange:n=>{n=a({side:"all",value:n});let r={...e};t.forEach(({name:e})=>{r={...r,[e]:n}}),i(r)},...o})),sr=({label:e,fields:t=[],values:n={},renderLabel:r=N.noop,renderControl:i=N.noop,onChange:a=N.noop,normalizeValue:o=({side:e,value:t})=>t,isLinkedGroup:s=!0,getInitialLinkedState:l=N.noop,className:c,columns:d,hideHeader:u=!1,...p})=>{const m={fields:t,values:n,renderControl:i,onChange:a,normalizeValue:o,...p},[f,h]=s?function(e){const[t,n]=(0,y.useState)(e);return(0,y.useEffect)(()=>n(e),[e]),[t,n]}(l(n)):[!1,N.noop];return(0,on.jsxs)(Xn,{className:E("group-control",c,{[`is-${d}-columns`]:d}),...p,children:[!u&&(0,on.jsxs)(Zn,{className:"group-control__header",children:[r({label:e,isLinkedGroup:s,...p}),s&&(0,on.jsx)(tr,{onClick:()=>{h(!f)},isLinked:f})]}),(0,on.jsxs)(Jn,{className:"group-control__body",children:[f&&(0,on.jsx)(or,{...m}),!f&&(0,on.jsx)(ar,{...m})]})]})};tt.fieldset`
+`;var Qn=(0,on.jsx)(sn.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,on.jsx)(sn.Path,{d:"M10 17.389H8.444A5.194 5.194 0 1 1 8.444 7H10v1.5H8.444a3.694 3.694 0 0 0 0 7.389H10v1.5ZM14 7h1.556a5.194 5.194 0 0 1 0 10.39H14v-1.5h1.556a3.694 3.694 0 0 0 0-7.39H14V7Zm-4.5 6h5v-1.5h-5V13Z"})}),er=(0,on.jsx)(sn.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,on.jsx)(sn.Path,{d:"M17.031 4.703 15.576 4l-1.56 3H14v.03l-2.324 4.47H9.5V13h1.396l-1.502 2.889h-.95a3.694 3.694 0 0 1 0-7.389H10V7H8.444a5.194 5.194 0 1 0 0 10.389h.17L7.5 19.53l1.416.719L15.049 8.5h.507a3.694 3.694 0 0 1 0 7.39H14v1.5h1.556a5.194 5.194 0 0 0 .273-10.383l1.202-2.304Z"})});function tr({isLinked:e,...t}){const n=e?(0,b.__)("Unlink Sides","content-blocks-builder"):(0,b.__)("Link Sides","content-blocks-builder");return(0,on.jsx)(x.Tooltip,{text:n,children:(0,on.jsx)(x.Button,{...t,className:"component-group-control__linked-button",size:"small",icon:e?Qn:er,iconSize:24,"aria-label":n})})}var nr=n(774),rr=n.n(nr);const ir=({values:e,fields:t})=>{const n=t.map(({name:t})=>{var n;return null!==(n=e[t])&&void 0!==n?n:void 0});return(r=n.filter(e=>e)).sort((e,t)=>(0,N.isObject)(e)?r.filter(t=>rr()(t,e)).length-r.filter(e=>rr()(e,t)).length:r.filter(t=>t===e).length-r.filter(e=>e===t).length).pop();var r},ar=({values:e,fields:t,renderControl:n,onChange:r,normalizeValue:i,...a})=>t.map(o=>{var s;const{name:l}=o;return(0,on.jsx)(y.Fragment,{children:n({value:null!==(s=e[l])&&void 0!==s?s:void 0,onChange:(c=l,t=>{t=i({side:c,value:t}),r({...e,[c]:t})}),fields:t,values:e,...o,...a})},`group-control-${l}`);var c}),or=({values:e,fields:t,renderControl:n,renderAllControl:r=null,onChange:i,normalizeValue:a,...o})=>(r||(r=n),r({value:ir({values:e,fields:t}),fields:t,values:e,onChange:n=>{n=a({side:"all",value:n});let r={...e};t.forEach(({name:e})=>{r={...r,[e]:n}}),i(r)},...o})),sr=({label:e,fields:t=[],values:n={},renderLabel:r=N.noop,renderControl:i=N.noop,onChange:a=N.noop,normalizeValue:o=({side:e,value:t})=>t,isLinkedGroup:s=!0,getInitialLinkedState:l=N.noop,className:c,columns:d,hideHeader:u=!1,...p})=>{const m={fields:t,values:n,renderControl:i,onChange:a,normalizeValue:o,...p},[f,h]=s?function(e){const[t,n]=(0,y.useState)(e);return(0,y.useEffect)(()=>n(e),[e]),[t,n]}(l(n)):[!1,N.noop];return(0,on.jsxs)(Xn,{className:E("group-control",c,{[`is-${d}-columns`]:d}),...p,children:[!u&&(0,on.jsxs)(Zn,{className:"group-control__header",children:[r({label:e,isLinkedGroup:s,...p}),s&&(0,on.jsx)(tr,{onClick:()=>{h(!f)},isLinked:f})]}),(0,on.jsxs)(Jn,{className:"group-control__body",children:[f&&(0,on.jsx)(or,{...m}),!f&&(0,on.jsx)(ar,{...m})]})]})};tt.fieldset`
   .components-range-control > .components-base-control__field {
     margin-bottom: 0;
   }
@@ -360,10 +370,6 @@
   .group-control__body {
     > *:nth-of-type(3) {
       order: 2;
-    }
-
-    .components-input-control__input {
-      height: 40px;
     }
   }
 `,tt(it.__experimentalPanelColorGradientSettings)`
@@ -396,14 +402,8 @@
     }
   }
 `,tt(sr)`
-  /* .block-editor-panel-color-gradient-settings__item {
-    padding: 8px !important;
-  } */
-
-  .components-toggle-control {
-    > * {
-      margin-bottom: 0;
-    }
+  .components-input-control__label {
+    white-space: nowrap;
   }
 `,tt.div`
   .shadow-list__title {
@@ -478,14 +478,9 @@
       box-shadow: inset 0 0 0 ${"1px"} ${lr};
     }
   }
-`,tt.div`
-  margin-top: 8px;
-  margin-bottom: revert;
-  font-size; 12px;
-  color: #757575;
-
-  &.no-margin {
-    margin-top: 0;
+`,tt(x.BaseControl)`
+  *:empty {
+    display: none;
   }
 `,tt.div`
   .settings-section__description {

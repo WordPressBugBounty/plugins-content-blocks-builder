@@ -134,6 +134,12 @@ if ( ! class_exists( CustomStyle::class ) ) :
 
 			// Migrate CBB class for old blocks.
 			add_filter( 'render_block', [ $this, 'migrate_cbb_class' ], 30, 3 );
+
+			// Render steps block data.
+			add_filter( 'render_block_data', [ $this, 'render_steps_block_data' ], 10, 3 );
+
+			// Render steps blocks.
+			add_filter( 'render_block', [ $this, 'render_steps_attributes' ], 10, 2 );
 		}
 
 		/**
@@ -2765,7 +2771,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 					$carousel_settings = $post_template->attributes['boldblocks']['carousel'] ?? [];
 					if ( $carousel_settings ) {
 						if ( ! $this->block_has_attribute( 'data-carousel-settings', $block_content ) ) {
-							$carousel_attr = $this->build_carousel_settings( $carousel_settings, true );
+							$carousel_attr = $this->build_carousel_settings( $carousel_settings, true, $post_template->parsed_block, $post_template );
 
 							if ( $carousel_attr ) {
 								$block_content = $this->add_data_to_block( $block_content, 'data-carousel-settings', esc_attr( $carousel_attr ) );
@@ -2940,11 +2946,13 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		/**
 		 * Build a json string of carousel settings
 		 *
-		 * @param array   $carousel_settings
-		 * @param boolean $exclude_li_role
+		 * @param array    $carousel_settings
+		 * @param boolean  $exclude_li_role
+		 * @param array    $parsed_block
+		 * @param WP_Block $block_instance
 		 * @return string
 		 */
-		private function build_carousel_settings( $carousel_settings, $exclude_li_role = false ) {
+		private function build_carousel_settings( $carousel_settings, $exclude_li_role = false, $parsed_block = null, $block_instance = null ) {
 			// phpcs:disable
 			$dataset = [];
 
@@ -3040,6 +3048,12 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			if ( in_array($effect, $slidesPerViewDependencies, true ) ) {
 				$dataset['slidesPerView'] = 1;
 			} else {
+				// centeredSlides.
+				$dataset['centeredSlides'] = $carousel_settings['centeredSlides'] ?? false;
+				if ($dataset['centeredSlides'] && $effect === 'slide' && ($carousel_settings['centeredSlidesSettings']['enable'] ?? '')) {
+					$dataset['centeredSlidesSettings'] = $carousel_settings['centeredSlidesSettings'];
+				}
+
 				$slidesPerView = $this->carousel_refine_slides_per_view( $carousel_settings['slidesPerView'] ?? 1 );
 				$slidesPerGroup = absint( $carousel_settings['slidesPerGroup'] ?? 0 );
 
@@ -3126,13 +3140,13 @@ if ( ! class_exists( CustomStyle::class ) ) :
 							],
 						];
 					}
-				}
-			}
 
-			// centeredSlides.
-			$dataset['centeredSlides'] = $carousel_settings['centeredSlides'] ?? false;
-			if ($dataset['centeredSlides'] && $effect === 'slide' && ($carousel_settings['centeredSlidesSettings']['enable'] ?? '')) {
-				$dataset['centeredSlidesSettings'] = $carousel_settings['centeredSlidesSettings'];
+					// Reset centeredSlides
+					if ( ! ( $slidesPerView > 1 || 'auto' === $slidesPerView ) ) {
+						unset( $dataset['centeredSlides'] );
+						unset( $dataset['centeredSlidesSettings'] );
+					}
+				}
 			}
 
 			// Pagination.
@@ -3174,7 +3188,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 				$dataset['a11y'] = ['slideRole' => '', 'slideLabelMessage' => ''];
 			}
 
-			return wp_json_encode( $dataset );
+			return wp_json_encode( apply_filters( 'cbb_get_carousel_settings', $dataset, $parsed_block, $block_instance ) );
 			// phpcs:enable
 		}
 
@@ -3522,7 +3536,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			$carousel_settings = $block['attrs']['boldblocks']['carousel'] ?? [];
 
 			// Dataset attribute.
-			$carousel_dataset = $this->build_carousel_settings( $carousel_settings );
+			$carousel_dataset = $this->build_carousel_settings( $carousel_settings, false, $block, $block_instance );
 			if ( $carousel_dataset ) {
 				$block_content = $this->add_data_to_block( $block_content, 'data-carousel-settings', esc_attr( $carousel_dataset ) );
 			}
@@ -3587,6 +3601,42 @@ if ( ! class_exists( CustomStyle::class ) ) :
 
 				// Render the updated HTML.
 				return $block_reader->get_updated_html();
+			}
+
+			return $block_content;
+		}
+
+		/**
+		 * Render steps block data
+		 *
+		 * @param array    $parsed_block
+		 * @param array    $block
+		 * @param WP_Block $parent_block
+		 * @return array
+		 */
+		public function render_steps_block_data( $parsed_block, $block, $parent_block ) {
+			if ( ! $parent_block || empty( $parent_block->attributes['boldblocks']['steps']['enableSteps'] ) ) {
+				return $parsed_block;
+			}
+
+			// Mark it as a child of steps.
+			$parsed_block['attrs']['boldblocks']['childStep'] = true;
+
+			return $parsed_block;
+		}
+
+		/**
+		 * Render aria attributes for steps blocks
+		 *
+		 * @param string   $block_content
+		 * @param array    $block
+		 * @return string
+		 */
+		public function render_steps_attributes( $block_content, $block ) {
+			if ( ! empty( $block['attrs']['boldblocks']['steps']['enableSteps'] ) ) {
+				$block_content = $this->add_data_to_block( $block_content, 'role', 'list' );
+			} elseif ( ! empty( $block['attrs']['boldblocks']['childStep'] ) ) {
+				$block_content = $this->add_data_to_block( $block_content, 'role', 'listitem' );
 			}
 
 			return $block_content;

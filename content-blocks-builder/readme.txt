@@ -4,8 +4,8 @@ Donate link:       https://contentblocksbuilder.com?utm_source=wp.org&utm_campai
 Tags:              blocks, Gutenberg, carousel, grid, popup
 Requires PHP:      7.4
 Requires at least: 6.6
-Tested up to:      6.9
-Stable tag:        2.8.9
+Tested up to:      7.0
+Stable tag:        2.8.10
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -319,16 +319,14 @@ Learn more about this error: [Unexpected or Invalid Content](https://wordpress.o
 
 == Changelog ==
 
-= 2.8.9 =
-*Release Date - 09 February 2026*
+= 2.8.10 =
+*Release Date - 09 March 2026*
 
-* Added    - Fraction pagination for carousel layouts
-* Improved - UI for the block supports panels to improve usability
-* Improved - UI for extra properties on select, number, and range custom attributes
-* Improved - Refactored the code to better handle synced override blocks
-* Improved - [CBB Pro] Added JSON editor support for JSON-type custom attributes
-* Improved - Added simple Markdown support (h1–h3, links, lists, bold, italic, code) for custom attribute labels and help text
-* Improved - Show a preview instead of a JSON string for read-only image and video attributes
-* Improved - Upgraded SwiperJS to version 12.1.0 for better performance and access to new features
+* Added    - New cbb_get_carousel_settings filter to allow changing the carousel settings on the server
+* Added    - [CBB Pro] More controls on the layout of carousel's pagination: position and active bullet style
+* Fixed    - Removed the copy item action link on unsupported post types
+* Refactor - Updated the settings UI to match WordPress 7.0
+* Improved - Adjusted the settings UI on the block edit screen
+* Fixed    - [CBB Pro] Entrance animations on carousel layout when both infinite and centeredSlides are enabled
 
 [View all changelog](https://contentblocksbuilder.com/changelog?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=Changelog)

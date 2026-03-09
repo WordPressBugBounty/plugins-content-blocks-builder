@@ -338,6 +338,9 @@ if ( ! class_exists( CopyPost::class ) ) :
 					[ 'in_footer' => true ]
 				);
 
+				// Load supported post types to JS.
+				wp_add_inline_script( 'cbb-copy-post', sprintf( 'const CBB_COPY_POST = %s;', wp_json_encode( [ 'postTypes' => $this->get_supported_post_types() ] ) ), 'before' );
+
 				// Add translation.
 				wp_set_script_translations( 'cbb-copy-post', 'content-blocks-builder' );
 			}
@@ -360,7 +363,29 @@ if ( ! class_exists( CopyPost::class ) ) :
 		 * @return bool True if the post type is in a list of supported psot types; false otherwise.
 		 */
 		protected function validate_post_type( $post_type, $post = null ) {
-			// Get all public post types.
+			/**
+			 * Fires when determining if the "Copy" row action should be made available.
+			 * Allows overriding supported post types.
+			 *
+			 * @param array   Post types supported by default.
+			 * @param WP_Post $post Post object of current post in listing.
+			 */
+			$valid_post_types = apply_filters(
+				'cbb_copy_item_validate_post_types',
+				$this->get_supported_post_types(),
+				$post
+			);
+
+			return in_array( $post_type, $valid_post_types, true );
+		}
+
+		/**
+		 * Get the list of supported post types.
+		 *
+		 * @return array
+		 */
+		private function get_supported_post_types() {
+			/// Get all public post types.
 			$public_types = array_keys( get_post_types( [ 'public' => true ] ) );
 
 			/**
@@ -370,13 +395,10 @@ if ( ! class_exists( CopyPost::class ) ) :
 			 * @param array   Post types supported by default.
 			 * @param WP_Post $post Post object of current post in listing.
 			 */
-			$valid_post_types = apply_filters(
-				'cbb_copy_item_post_types',
+			return apply_filters(
+				'cbb_copy_item_supported_post_types',
 				$public_types,
-				$post
 			);
-
-			return in_array( $post_type, $valid_post_types, true );
 		}
 	}
 endif;

@@ -71,6 +71,16 @@
     }
   }
 
+  &.is-2-columns,
+  &.is-3-columns,
+  &.is-4-columns {
+    .group-control__body {
+      > * {
+        width: auto;
+      }
+    }
+  }
+
   &.is-2-columns {
     .group-control__body {
       > * {
@@ -107,7 +117,7 @@
     }
   }
 `,tn=Kt(a.Flex)`
-  padding-bottom: 8px;
+  margin-bottom: 8px;
 
   .label-control {
     margin-bottom: 0 !important;
@@ -121,7 +131,7 @@
     flex: 1 0 auto;
     margin: 0 !important;
   }
-`;var rn=(0,he.jsx)(me.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,he.jsx)(me.Path,{d:"M10 17.389H8.444A5.194 5.194 0 1 1 8.444 7H10v1.5H8.444a3.694 3.694 0 0 0 0 7.389H10v1.5ZM14 7h1.556a5.194 5.194 0 0 1 0 10.39H14v-1.5h1.556a3.694 3.694 0 0 0 0-7.39H14V7Zm-4.5 6h5v-1.5h-5V13Z"})}),on=(0,he.jsx)(me.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,he.jsx)(me.Path,{d:"M17.031 4.703 15.576 4l-1.56 3H14v.03l-2.324 4.47H9.5V13h1.396l-1.502 2.889h-.95a3.694 3.694 0 0 1 0-7.389H10V7H8.444a5.194 5.194 0 1 0 0 10.389h.17L7.5 19.53l1.416.719L15.049 8.5h.507a3.694 3.694 0 0 1 0 7.39H14v1.5h1.556a5.194 5.194 0 0 0 .273-10.383l1.202-2.304Z"})});function an({isLinked:e,...t}){const n=e?(0,i.__)("Unlink Sides","content-blocks-builder"):(0,i.__)("Link Sides","content-blocks-builder");return(0,he.jsx)(a.Tooltip,{text:n,children:(0,he.jsx)("span",{children:(0,he.jsx)(a.Button,{...t,className:"component-group-control__linked-button",variant:e?"primary":"secondary",size:"small",icon:e?rn:on,iconSize:16,"aria-label":n})})})}var sn=n(774),ln=n.n(sn);const cn=({values:t,fields:n})=>{const r=n.map(({name:e})=>{var n;return null!==(n=t[e])&&void 0!==n?n:void 0});return(o=r.filter(e=>e)).sort((t,n)=>(0,e.isObject)(t)?o.filter(e=>ln()(e,t)).length-o.filter(e=>ln()(e,n)).length:o.filter(e=>e===t).length-o.filter(e=>e===n).length).pop();var o},dn=({values:e,fields:t,renderControl:n,onChange:r,normalizeValue:i,...a})=>t.map(s=>{var l;const{name:c}=s;return(0,he.jsx)(o.Fragment,{children:n({value:null!==(l=e[c])&&void 0!==l?l:void 0,onChange:(d=c,t=>{t=i({side:d,value:t}),r({...e,[d]:t})}),fields:t,values:e,...s,...a})},`group-control-${c}`);var d}),un=({values:e,fields:t,renderControl:n,renderAllControl:r=null,onChange:o,normalizeValue:i,...a})=>(r||(r=n),r({value:cn({values:e,fields:t}),fields:t,values:e,onChange:n=>{n=i({side:"all",value:n});let r={...e};t.forEach(({name:e})=>{r={...r,[e]:n}}),o(r)},...a})),pn=({label:t,fields:n=[],values:r={},renderLabel:i=e.noop,renderControl:a=e.noop,onChange:s=e.noop,normalizeValue:l=({side:e,value:t})=>t,isLinkedGroup:c=!0,getInitialLinkedState:d=e.noop,className:u,columns:p,hideHeader:h=!1,...m})=>{const f={fields:n,values:r,renderControl:a,onChange:s,normalizeValue:l,...m},[g,b]=c?function(e){const[t,n]=(0,o.useState)(e);return(0,o.useEffect)(()=>n(e),[e]),[t,n]}(d(r)):[!1,e.noop];return(0,he.jsxs)(en,{className:Zt("group-control",u,{[`is-${p}-columns`]:p}),...m,children:[!h&&(0,he.jsxs)(tn,{className:"group-control__header",children:[i({label:t,isLinkedGroup:c,...m}),c&&(0,he.jsx)(an,{onClick:()=>{b(!g)},isLinked:g})]}),(0,he.jsxs)(nn,{className:"group-control__body",children:[g&&(0,he.jsx)(un,{...f}),!g&&(0,he.jsx)(dn,{...f})]})]})};Kt.fieldset`
+`;var rn=(0,he.jsx)(me.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,he.jsx)(me.Path,{d:"M10 17.389H8.444A5.194 5.194 0 1 1 8.444 7H10v1.5H8.444a3.694 3.694 0 0 0 0 7.389H10v1.5ZM14 7h1.556a5.194 5.194 0 0 1 0 10.39H14v-1.5h1.556a3.694 3.694 0 0 0 0-7.39H14V7Zm-4.5 6h5v-1.5h-5V13Z"})}),on=(0,he.jsx)(me.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",children:(0,he.jsx)(me.Path,{d:"M17.031 4.703 15.576 4l-1.56 3H14v.03l-2.324 4.47H9.5V13h1.396l-1.502 2.889h-.95a3.694 3.694 0 0 1 0-7.389H10V7H8.444a5.194 5.194 0 1 0 0 10.389h.17L7.5 19.53l1.416.719L15.049 8.5h.507a3.694 3.694 0 0 1 0 7.39H14v1.5h1.556a5.194 5.194 0 0 0 .273-10.383l1.202-2.304Z"})});function an({isLinked:e,...t}){const n=e?(0,i.__)("Unlink Sides","content-blocks-builder"):(0,i.__)("Link Sides","content-blocks-builder");return(0,he.jsx)(a.Tooltip,{text:n,children:(0,he.jsx)(a.Button,{...t,className:"component-group-control__linked-button",size:"small",icon:e?rn:on,iconSize:24,"aria-label":n})})}var sn=n(774),ln=n.n(sn);const cn=({values:t,fields:n})=>{const r=n.map(({name:e})=>{var n;return null!==(n=t[e])&&void 0!==n?n:void 0});return(o=r.filter(e=>e)).sort((t,n)=>(0,e.isObject)(t)?o.filter(e=>ln()(e,t)).length-o.filter(e=>ln()(e,n)).length:o.filter(e=>e===t).length-o.filter(e=>e===n).length).pop();var o},dn=({values:e,fields:t,renderControl:n,onChange:r,normalizeValue:i,...a})=>t.map(s=>{var l;const{name:c}=s;return(0,he.jsx)(o.Fragment,{children:n({value:null!==(l=e[c])&&void 0!==l?l:void 0,onChange:(d=c,t=>{t=i({side:d,value:t}),r({...e,[d]:t})}),fields:t,values:e,...s,...a})},`group-control-${c}`);var d}),un=({values:e,fields:t,renderControl:n,renderAllControl:r=null,onChange:o,normalizeValue:i,...a})=>(r||(r=n),r({value:cn({values:e,fields:t}),fields:t,values:e,onChange:n=>{n=i({side:"all",value:n});let r={...e};t.forEach(({name:e})=>{r={...r,[e]:n}}),o(r)},...a})),pn=({label:t,fields:n=[],values:r={},renderLabel:i=e.noop,renderControl:a=e.noop,onChange:s=e.noop,normalizeValue:l=({side:e,value:t})=>t,isLinkedGroup:c=!0,getInitialLinkedState:d=e.noop,className:u,columns:p,hideHeader:h=!1,...m})=>{const f={fields:n,values:r,renderControl:a,onChange:s,normalizeValue:l,...m},[g,b]=c?function(e){const[t,n]=(0,o.useState)(e);return(0,o.useEffect)(()=>n(e),[e]),[t,n]}(d(r)):[!1,e.noop];return(0,he.jsxs)(en,{className:Zt("group-control",u,{[`is-${p}-columns`]:p}),...m,children:[!h&&(0,he.jsxs)(tn,{className:"group-control__header",children:[i({label:t,isLinkedGroup:c,...m}),c&&(0,he.jsx)(an,{onClick:()=>{b(!g)},isLinked:g})]}),(0,he.jsxs)(nn,{className:"group-control__body",children:[g&&(0,he.jsx)(un,{...f}),!g&&(0,he.jsx)(dn,{...f})]})]})};Kt.fieldset`
   .components-range-control > .components-base-control__field {
     margin-bottom: 0;
   }
@@ -129,10 +139,6 @@
   .group-control__body {
     > *:nth-of-type(3) {
       order: 2;
-    }
-
-    .components-input-control__input {
-      height: 40px;
     }
   }
 `,Kt(c.__experimentalPanelColorGradientSettings)`
@@ -165,14 +171,8 @@
     }
   }
 `,Kt(pn)`
-  /* .block-editor-panel-color-gradient-settings__item {
-    padding: 8px !important;
-  } */
-
-  .components-toggle-control {
-    > * {
-      margin-bottom: 0;
-    }
+  .components-input-control__label {
+    white-space: nowrap;
   }
 `,Kt.div`
   .shadow-list__title {
@@ -247,14 +247,9 @@
       box-shadow: inset 0 0 0 ${"1px"} ${mn};
     }
   }
-`,Kt.div`
-  margin-top: 8px;
-  margin-bottom: revert;
-  font-size; 12px;
-  color: #757575;
-
-  &.no-margin {
-    margin-top: 0;
+`,Kt(a.BaseControl)`
+  *:empty {
+    display: none;
   }
 `,({onSave:e})=>{const[t,n]=(0,o.useState)(!1);return(0,he.jsxs)(he.Fragment,{children:[(0,he.jsx)(a.Button,{variant:"primary",onClick:t=>{t.preventDefault(),n(!0),e().finally(()=>{n(!1)})},children:(0,i.__)("Update Settings","content-blocks-builder")}),t&&(0,he.jsx)(a.Spinner,{})]})}),bn=e=>{const{saveEditedEntityRecord:t}=(0,l.useDispatch)(s.store),[n,r]=(0,o.useState)({type:"success",message:""});return{handleSave:()=>t("root","site").then(()=>{r({type:"success",message:e.Success})}).catch(t=>{log(t,"error"),r({type:"error",message:e.Error})}),MessageNotice:()=>n&&n?.message&&(0,he.jsx)(a.Notice,{status:n?.type,isDismissible:!1,children:n.message})}},yn=Kt.div`
   .settings-section__description {

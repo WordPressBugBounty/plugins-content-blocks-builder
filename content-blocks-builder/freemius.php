@@ -30,15 +30,16 @@ if ( !function_exists( 'cbb_fs' ) ) {
                 $menu['first-path'] = 'edit.php?post_type=boldblocks_block&page=cbb-settings';
             }
             $cbb_fs = fs_dynamic_init( array(
-                'id'             => '11230',
-                'slug'           => 'content-blocks-builder',
-                'type'           => 'plugin',
-                'public_key'     => 'pk_3cf9ea74cc57ecea98583ead30a34',
-                'is_premium'     => false,
-                'has_addons'     => false,
-                'has_paid_plans' => true,
-                'menu'           => $menu,
-                'is_live'        => true,
+                'id'               => '11230',
+                'slug'             => 'content-blocks-builder',
+                'type'             => 'plugin',
+                'public_key'       => 'pk_3cf9ea74cc57ecea98583ead30a34',
+                'is_premium'       => false,
+                'has_addons'       => false,
+                'has_paid_plans'   => true,
+                'menu'             => $menu,
+                'is_live'          => true,
+                'is_org_compliant' => true,
             ) );
         }
         return $cbb_fs;
