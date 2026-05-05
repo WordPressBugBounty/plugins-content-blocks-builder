@@ -151,7 +151,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 			add_action( 'save_post_' . $this->post_type, [ $this, 'save_post' ], 10, 2 );
 
 			// Clear the transient cache on upgraded.
-			add_action( 'cbb_version_upgraded', [ $this, 'clear_transient_cache' ] );
+			add_action( 'cbb/version_upgraded', [ $this, 'clear_transient_cache' ] );
 
 			// Enqueue frontend scripts for non-cbb blocks.
 			add_filter( 'render_block', [ $this, 'enqueue_frontend_block_scripts' ], 10, 3 );

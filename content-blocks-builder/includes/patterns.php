@@ -89,7 +89,7 @@ if ( ! class_exists( Patterns::class ) ) :
 			add_action( 'save_post_' . $this->post_type, [ $this, 'save_post' ], 10, 2 );
 
 			// Clear the transient cache on upgraded.
-			add_action( 'cbb_version_upgraded', [ $this, 'clear_transient_cache' ] );
+			add_action( 'cbb/version_upgraded', [ $this, 'clear_transient_cache' ] );
 
 			// Force to remove custom fields.
 			add_action( 'add_meta_boxes', [ $this, 'remove_meta_boxes' ] );

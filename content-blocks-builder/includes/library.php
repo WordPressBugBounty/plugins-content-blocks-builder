@@ -56,7 +56,7 @@ if ( ! class_exists( Library::class ) ) :
 			add_action( 'in_admin_header', [ $this, 'in_admin_header_variation_library' ] );
 
 			// Clear the blocks cache on upgraded.
-			add_action( 'cbb_version_upgraded', [ $this, 'clear_library_cache' ] );
+			add_action( 'cbb/version_upgraded', [ $this, 'clear_library_cache' ] );
 
 			// Enqueue block library scripts.
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_block_library_scripts' ] );

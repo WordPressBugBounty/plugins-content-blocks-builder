@@ -61,7 +61,7 @@ if ( ! class_exists( Settings::class ) ) :
 			add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_settings_scripts' ] );
 
 			// Do setting up stuff when the plugin is activated.
-			add_action( 'content_block_builder_activate', [ $this, 'run_the_plugin_setup' ] );
+			add_action( 'cbb/activate', [ $this, 'run_the_plugin_setup' ] );
 
 			// Maybe update core blocks.
 			add_action( 'init', [ $this, 'maybe_update_core_blocks' ] );
@@ -70,7 +70,7 @@ if ( ! class_exists( Settings::class ) ) :
 			add_action( 'rest_api_init', [ $this, 'register_docs_endpoint' ] );
 
 			// Clear the transient cache on upgraded.
-			add_action( 'cbb_version_upgraded', [ $this, 'clear_transient_cache' ] );
+			add_action( 'cbb/version_upgraded', [ $this, 'clear_transient_cache' ] );
 
 			// Change the footer text for the settings pages.
 			add_action( 'admin_footer_text', [ $this, 'admin_footer_text' ] );
@@ -79,7 +79,7 @@ if ( ! class_exists( Settings::class ) ) :
 			add_action( 'admin_init', [ $this, 'boldblocks_purge_cache' ] );
 
 			// Migrate legacy options.
-			add_action( 'cbb_version_upgraded', [ $this, 'migrate_legacy_options' ] );
+			add_action( 'cbb/version_upgraded', [ $this, 'migrate_legacy_options' ] );
 
 			// Register setting fields.
 			add_action( 'init', [ $this, 'register_settings' ] );
@@ -111,7 +111,7 @@ if ( ! class_exists( Settings::class ) ) :
 					],
 				];
 
-				$left_links = apply_filters( 'content_blocks_builder_get_header_left_links', $left_links );
+				$left_links = apply_filters( 'cbb_get_header_left_links', $left_links );
 
 				?>
 				<div class="cbb-settings-header">

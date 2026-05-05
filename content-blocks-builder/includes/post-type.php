@@ -25,7 +25,7 @@ if ( ! class_exists( PostType::class ) ) :
 		private static $instance;
 
 		/**
-		 * A dummy constructor
+		 * The constructor
 		 */
 		private function __construct() {}
 

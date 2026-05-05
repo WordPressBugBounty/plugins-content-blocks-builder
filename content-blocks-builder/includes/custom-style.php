@@ -1580,8 +1580,14 @@ if ( ! class_exists( CustomStyle::class ) ) :
 				} elseif ( $media_url ) {
 					return $this->build_custom_image_background( $background, $block_content, $block, $block_instance );
 				}
-			} elseif ( 'video' === $media_type && $media_url ) {
-				return $this->build_video_background( $background, $block_content, $block, $block_instance );
+			} elseif ( 'video' === $media_type ) {
+				if ( $media_url ) {
+					return $this->build_video_background( $background, $block_content, $block, $block_instance );
+				}
+			} elseif ( 'embed' === $media_type ) {
+				if ( $media_url ) {
+					return $this->build_embed_background( $background, $block_content, $block, $block_instance );
+				}
 			}
 
 			return $block_content;
@@ -2160,7 +2166,8 @@ if ( ! class_exists( CustomStyle::class ) ) :
 
 			if ( $media['isPausable'] ?? false ) {
 				$block_class      .= ' cbb-has-video-controls';
-				$block_background .= '<button class="cbb-play-pause cbb-video-play-pause is-playing"></button>';
+				$position_class    = ( $media['playPausePosition'] ?? '' ) ? ' is-' . esc_attr( $media['playPausePosition'] ) : '';
+				$block_background .= '<button class="cbb-play-pause cbb-video-play-pause is-playing' . $position_class . '"></button>';
 			}
 
 			if ( strpos( $block['innerHTML'] ?? '', $block_class ) === false ) {
@@ -2171,6 +2178,121 @@ if ( ! class_exists( CustomStyle::class ) ) :
 
 			return $block_content;
 		}
+
+		/**
+		 * Build the embed background
+		 *
+		 * @param array    $background
+		 * @param string   $block_content
+		 * @param array    $block
+		 * @param WP_Block $block_instance
+		 * @return string
+		 */
+		private function build_embed_background( $background, $block_content, $block, $block_instance ) {
+			$media = $background['embed'] ?? [];
+
+			// Invalid data.
+			if ( ! is_string( $media['url'] ) ) {
+				return $block_content;
+			}
+
+			$block_background = '';
+
+			// Use WordPress's native oEmbed processing (includes caching).
+			$oembed_html = wp_oembed_get( $media['url'] );
+
+			if ( $oembed_html ) {
+				// Extract iframe src from the oEmbed HTML.
+				preg_match( '/src=["\']([^"\']+)["\']/', $oembed_html, $src_matches );
+				if ( ! empty( $src_matches[1] ) ) {
+					$iframe_src = $src_matches[1];
+
+					// Detect provider from iframe src URL.
+					$lower_src = strtolower( $iframe_src );
+					$provider  = null;
+
+					if ( str_contains( $lower_src, 'youtube.com' ) || str_contains( $lower_src, 'youtu.be' ) ) {
+						$provider = 'youtube';
+					} elseif ( str_contains( $lower_src, 'vimeo.com' ) ) {
+						$provider = 'vimeo';
+					} elseif ( str_contains( $lower_src, 'videopress.com' ) ) {
+						$provider = 'videopress';
+					} elseif ( str_contains( $lower_src, 'wordpress.tv' ) ) {
+						$provider = 'wordpress-tv';
+					}
+
+					// Modify iframe src to add background video parameters based on provider.
+					$parsed_url = wp_parse_url( $iframe_src );
+					if ( $parsed_url && isset( $parsed_url['host'] ) ) {
+						// Parse existing query parameters.
+						$query_params = array();
+						if ( isset( $parsed_url['query'] ) ) {
+							parse_str( $parsed_url['query'], $query_params );
+						}
+
+						// Add background video parameters based on provider.
+						if ( 'youtube' === $provider ) {
+							$query_params['autoplay']    = '1';
+							$query_params['mute']        = '1';
+							$query_params['loop']        = '1';
+							$query_params['controls']    = '0';
+							$query_params['playsinline'] = '1';
+							$query_params['rel']         = '1';
+
+							// For loop to work, we need the playlist parameter.
+							$path          = $parsed_url['path'] ?? '';
+							$path_segments = explode( '/', $path );
+							$video_id      = end( $path_segments );
+							if ( $video_id ) {
+								$query_params['playlist'] = $video_id;
+							}
+						} elseif ( 'vimeo' === $provider ) {
+							$query_params['autoplay']    = '1';
+							$query_params['muted']       = '1';
+							$query_params['loop']        = '1';
+							$query_params['background']  = '1';
+							$query_params['controls']    = '0';
+							$query_params['transparent'] = '0';
+						} else {
+							$query_params['autoplay'] = '1';
+							$query_params['loop']     = '1';
+							$query_params['muted']    = '1';
+						}
+
+						// Rebuild the URL with new parameters.
+						$iframe_src = $parsed_url['scheme'] . '://' . $parsed_url['host'];
+						if ( isset( $parsed_url['path'] ) ) {
+							$iframe_src .= $parsed_url['path'];
+						}
+						if ( ! empty( $query_params ) ) {
+							$iframe_src .= '?' . http_build_query( $query_params );
+						}
+					}
+
+					// Build the iframe HTML that will replace the figure.
+					$iframe_html = sprintf(
+						'<iframe src="%s" title="Background video" frameborder="0" allow="autoplay; fullscreen"></iframe>',
+						esc_url( $iframe_src )
+					);
+
+					$block_background = sprintf( '<div class="bb:block-background bb:block-background--embed">%s</div>', $iframe_html );
+				}
+			}
+
+			if ( ! $block_background ) {
+				return $block_content;
+			}
+
+			$block_class = 'bb:has-background bb:has-background--embed';
+			if ( strpos( $block['innerHTML'] ?? '', $block_class ) === false ) {
+				$block_content = $this->add_class_to_block( $block_content, $block_class );
+			}
+
+			$block_content = $this->add_inner_content_to_block( $block_content, $block_background );
+
+			return $block_content;
+		}
+
 
 		/**
 		 * Render block overlay
@@ -3628,8 +3750,8 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		/**
 		 * Render aria attributes for steps blocks
 		 *
-		 * @param string   $block_content
-		 * @param array    $block
+		 * @param string $block_content
+		 * @param array  $block
 		 * @return string
 		 */
 		public function render_steps_attributes( $block_content, $block ) {
@@ -3885,6 +4007,44 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			}
 
 			return $block_content;
+		}
+
+		/**
+		 * Get inner html of a tag
+		 *
+		 * @param string $content
+		 * @param string $tag_name
+		 * @return string
+		 */
+		private function get_element_inner_html( $content, $tag_name ) {
+			$processor = new class( $content ) extends \WP_HTML_Tag_Processor {
+				public function get_inner_html( $tag_name ) {
+					$this->set_bookmark( 'open' );
+					$opener = $this->bookmarks['open'];
+
+					while ( $this->next_token() ) {
+						if ( $this->get_tag() === $tag_name && $this->is_tag_closer() ) {
+
+							$this->set_bookmark( 'close' );
+							$closer = $this->bookmarks['close'];
+
+							return substr(
+								$this->html,
+								$opener->start + $opener->length,
+								$closer->start - $opener->start - $opener->length
+							);
+						}
+					}
+
+					return '';
+				}
+			};
+
+			if ( ! $processor->next_tag( $tag_name ) ) {
+				return '';
+			}
+
+			return $processor->get_inner_html( $tag_name );
 		}
 
 		/**

@@ -2,10 +2,10 @@
 Contributors: Mr2P, freemius
 Donate link:       https://contentblocksbuilder.com?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=CBB+Donate
 Tags:              blocks, Gutenberg, carousel, grid, popup
-Requires PHP:      7.4
-Requires at least: 6.6
+Requires PHP:      8.0
+Requires at least: 6.9
 Tested up to:      7.0
-Stable tag:        2.8.10
+Stable tag:        2.8.11
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -319,14 +319,15 @@ Learn more about this error: [Unexpected or Invalid Content](https://wordpress.o
 
 == Changelog ==
 
-= 2.8.10 =
-*Release Date - 09 March 2026*
+= 2.8.11 =
+*Release Date - 05 May 2026*
 
-* Added    - New cbb_get_carousel_settings filter to allow changing the carousel settings on the server
-* Added    - [CBB Pro] More controls on the layout of carousel's pagination: position and active bullet style
-* Fixed    - Removed the copy item action link on unsupported post types
-* Refactor - Updated the settings UI to match WordPress 7.0
-* Improved - Adjusted the settings UI on the block edit screen
-* Fixed    - [CBB Pro] Entrance animations on carousel layout when both infinite and centeredSlides are enabled
+* Added    - Support for core width and height in WordPress 7.0
+* Added    - Support for embeds (YouTube, Vimeo, TikTok, etc.) as background
+* Improved - Rearranged block toolbar button positions
+* Improved - Hid the Edit pattern button on the toolbar and the inspector settings of contentOnly blocks
+* Improved - Enhanced carousel pagination bullet styles
+* Improved - [CBB Pro] Added option to place carousel navigation buttons at the bottom center
+* Improved - [CBB Pro] Added option to change the position of the background video play/pause button
 
 [View all changelog](https://contentblocksbuilder.com/changelog?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=Changelog)

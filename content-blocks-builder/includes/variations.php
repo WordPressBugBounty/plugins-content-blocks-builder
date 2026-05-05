@@ -98,7 +98,7 @@ if ( ! class_exists( Variations::class ) ) :
 			add_action( 'save_post_' . $this->post_type, [ $this, 'save_post' ], 10, 2 );
 
 			// Clear the transient cache on upgraded.
-			add_action( 'cbb_version_upgraded', [ $this, 'clear_transient_cache' ] );
+			add_action( 'cbb/version_upgraded', [ $this, 'clear_transient_cache' ] );
 
 			// Enqueue styles for the iframe editor.
 			add_filter( 'block_editor_settings_all', [ $this, 'enqueue_style_for_the_editor' ] );

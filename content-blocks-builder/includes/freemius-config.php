@@ -31,7 +31,7 @@ if ( ! class_exists( FreemiusConfig::class ) ) :
 		 */
 		public function run() {
 			// Add header left links.
-			add_filter( 'content_blocks_builder_get_header_left_links', [ $this, 'header_links' ] );
+			add_filter( 'cbb_get_header_left_links', [ $this, 'header_links' ] );
 
 			// Add the settings page link to plugin list screen.
 			add_filter( 'plugin_action_links_' . plugin_basename( BOLDBLOCKS_CBB_ROOT_FILE ), [ $this, 'plugin_settings_links' ] );
