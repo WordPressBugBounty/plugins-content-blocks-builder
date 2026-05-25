@@ -113,5 +113,283 @@ if ( ! class_exists( IconLibrary::class ) ) :
 
 			return $media_svgs;
 		}
+
+		/**
+		 * Sanitize SVG
+		 *
+		 * @param string $svg
+		 * @return string
+		 */
+		public function sanitize_svg( $svg ) {
+			if ( ! is_string( $svg ) ) {
+				return '';
+			}
+
+			if ( ! preg_match( '/^\s*<svg\b/i', $svg ) ) {
+				return '';
+			}
+
+			// Hard block dangerous stuff.
+			if (
+			preg_match(
+				'/<(script|iframe|object|embed|foreignObject|image|feImage|use|animate|set)\b/i',
+				$svg
+			)
+			) {
+				return '';
+			}
+
+			// Remove null bytes.
+			$svg = wp_kses_no_null( $svg );
+
+			// Remove event handlers.
+			$svg = preg_replace(
+				'/\son[a-z-]+\s*=\s*("|\').*?\1/i',
+				'',
+				$svg
+			);
+
+			// Remove href-like attrs.
+			$svg = preg_replace(
+				'/\s(?:href|xlink:href|src)\s*=\s*("|\').*?\1/i',
+				'',
+				$svg
+			);
+
+			// KSES sanitization.
+			$svg = wp_kses(
+				$svg,
+				$this->get_allowed_svg_tags()
+			);
+
+			return trim( $svg );
+		}
+
+		/**
+		 * Get allowed svg tags and attributes
+		 *
+		 * @return array
+		 */
+		private function get_allowed_svg_tags() {
+			$global_attrs = [
+				// Common.
+				'id'                  => true,
+				'class'               => true,
+				'aria-hidden'         => true,
+
+				// Presentation.
+				'clip-path'           => true,
+				'clip-rule'           => true,
+				'color'               => true,
+				'color-interpolation' => true,
+				'display'             => true,
+				'fill'                => true,
+				'fill-opacity'        => true,
+				'fill-rule'           => true,
+				'mask'                => true,
+				'opacity'             => true,
+				'pointer-events'      => true,
+				'shape-rendering'     => true,
+				'stroke'              => true,
+				'stroke-dasharray'    => true,
+				'stroke-dashoffset'   => true,
+				'stroke-linecap'      => true,
+				'stroke-linejoin'     => true,
+				'stroke-miterlimit'   => true,
+				'stroke-opacity'      => true,
+				'stroke-width'        => true,
+				'transform'           => true,
+				'vector-effect'       => true,
+				'visibility'          => true,
+			];
+
+			$allowed_svg = [
+				'svg'            => array_merge(
+					$global_attrs,
+					[
+						'xmlns'               => true,
+						'viewbox'             => true,
+						'width'               => true,
+						'height'              => true,
+						'x'                   => true,
+						'y'                   => true,
+						'preserveaspectratio' => true,
+						'name'                => true,
+						'role'                => true,
+						'focusable'           => true,
+						'aria-labelledby'     => true,
+					]
+				),
+
+				'g'              => $global_attrs,
+
+				'defs'           => [],
+
+				'symbol'         => [
+					'id'      => true,
+					'viewbox' => true,
+				],
+
+				'title'          => [],
+				'desc'           => [],
+
+				'path'           => array_merge(
+					$global_attrs,
+					[
+						'd'          => true,
+						'pathlength' => true,
+					]
+				),
+
+				'circle'         => array_merge(
+					$global_attrs,
+					[
+						'cx'         => true,
+						'cy'         => true,
+						'r'          => true,
+						'pathlength' => true,
+					]
+				),
+
+				'ellipse'        => array_merge(
+					$global_attrs,
+					[
+						'cx'         => true,
+						'cy'         => true,
+						'rx'         => true,
+						'ry'         => true,
+						'pathlength' => true,
+					]
+				),
+
+				'rect'           => array_merge(
+					$global_attrs,
+					[
+						'x'          => true,
+						'y'          => true,
+						'width'      => true,
+						'height'     => true,
+						'rx'         => true,
+						'ry'         => true,
+						'pathlength' => true,
+					]
+				),
+
+				'line'           => array_merge(
+					$global_attrs,
+					[
+						'x1'         => true,
+						'y1'         => true,
+						'x2'         => true,
+						'y2'         => true,
+						'pathlength' => true,
+					]
+				),
+
+				'polyline'       => array_merge(
+					$global_attrs,
+					[
+						'points'     => true,
+						'pathlength' => true,
+					]
+				),
+
+				'polygon'        => array_merge(
+					$global_attrs,
+					[
+						'points'     => true,
+						'pathlength' => true,
+					]
+				),
+
+				'linearGradient' => [
+					'id'                => true,
+					'x1'                => true,
+					'y1'                => true,
+					'x2'                => true,
+					'y2'                => true,
+					'gradientunits'     => true,
+					'gradienttransform' => true,
+					'spreadmethod'      => true,
+				],
+
+				'radialGradient' => [
+					'id'                => true,
+					'cx'                => true,
+					'cy'                => true,
+					'r'                 => true,
+					'fx'                => true,
+					'fy'                => true,
+					'gradientunits'     => true,
+					'gradienttransform' => true,
+					'spreadmethod'      => true,
+				],
+
+				'stop'           => [
+					'offset'       => true,
+					'stop-color'   => true,
+					'stop-opacity' => true,
+				],
+
+				'clipPath'       => [
+					'id'            => true,
+					'clippathunits' => true,
+					'transform'     => true,
+				],
+
+				'mask'           => [
+					'id'               => true,
+					'x'                => true,
+					'y'                => true,
+					'width'            => true,
+					'height'           => true,
+					'maskunits'        => true,
+					'maskcontentunits' => true,
+				],
+
+				'pattern'        => [
+					'id'               => true,
+					'x'                => true,
+					'y'                => true,
+					'width'            => true,
+					'height'           => true,
+					'patternunits'     => true,
+					'patterntransform' => true,
+					'viewbox'          => true,
+				],
+
+				'text'           => array_merge(
+					$global_attrs,
+					[
+						'x'              => true,
+						'y'              => true,
+						'dx'             => true,
+						'dy'             => true,
+						'textlength'     => true,
+						'rotate'         => true,
+						'text-anchor'    => true,
+						'font-size'      => true,
+						'font-family'    => true,
+						'font-weight'    => true,
+						'letter-spacing' => true,
+						'lengthadjust'   => true,
+					]
+				),
+
+				'tspan'          => [
+					'x'              => true,
+					'y'              => true,
+					'dx'             => true,
+					'dy'             => true,
+					'text-anchor'    => true,
+					'font-size'      => true,
+					'font-family'    => true,
+					'font-weight'    => true,
+					'letter-spacing' => true,
+				],
+			];
+
+			return apply_filters( 'cbb_get_allowed_svg_tags', $allowed_svg );
+		}
 	}
 endif;

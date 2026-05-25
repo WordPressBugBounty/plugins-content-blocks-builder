@@ -140,6 +140,9 @@ if ( ! class_exists( CustomStyle::class ) ) :
 
 			// Render steps blocks.
 			add_filter( 'render_block', [ $this, 'render_steps_attributes' ], 10, 2 );
+
+			// Sanitize post data before saving to database.
+			add_filter( 'wp_insert_post_data', [ $this, 'sanitize_post_data' ] );
 		}
 
 		/**
@@ -1107,6 +1110,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		/**
 		 * Build transform item: translate, rotate, scale, skew
 		 *
+		 * @param array $transform_item
 		 * @return string
 		 */
 		private function build_transform_item( $transform_item ) {
@@ -1399,6 +1403,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		 * Build style for accordion border
 		 *
 		 * @param array $args
+		 * @param array $style_array
 		 * @return string
 		 */
 		private function build_accordion_border_style( $args, &$style_array ) {
@@ -1441,6 +1446,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		 * Build style for accordion radius
 		 *
 		 * @param array $args
+		 * @param array $style_array
 		 * @return string
 		 */
 		private function build_accordion_radius_style( $args, &$style_array ) {
@@ -1484,7 +1490,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		/**
 		 * Check whether current block has custom style or not.
 		 *
-		 * @param [type] $block
+		 * @param array $block
 		 * @return boolean
 		 */
 		private function get_custom_css_style( $block ) {
@@ -3282,6 +3288,18 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			$navigation            = $carousel_settings['navigation'] ?? [];
 			$dataset['navigation'] = $navigation['enable'] ?? false;
 			if ( $dataset['navigation'] ) {
+				$next_icon = trim($navigation['nextIcon']['value'] ?? '');
+				$prev_icon = trim($navigation['prevIcon']['value'] ?? '');
+				if ( $next_icon || $prev_icon ) {
+					$svg_sanitizer = $this->the_plugin_instance->get_component( IconLibrary::class );
+					if ($svg_sanitizer) {
+						$next_icon = $next_icon ? $svg_sanitizer->sanitize_svg( $next_icon ) : '';
+						$prev_icon = $prev_icon ? $svg_sanitizer->sanitize_svg( $prev_icon ) : '';
+
+						$navigation['nextIcon']['value'] = $next_icon;
+						$navigation['prevIcon']['value'] = $prev_icon;
+					}
+				}
 				$dataset['navigationSettings'] = $navigation;
 			}
 
@@ -3318,7 +3336,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		 * Refine the slides per view
 		 *
 		 * @param mixed $raw_value
-		 * @return void
+		 * @return string|float 'auto' || number
 		 */
 		private function carousel_refine_slides_per_view( $raw_value ) {
 			$value = $raw_value;
@@ -3977,6 +3995,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		 * Add data attribute to block wrapper
 		 *
 		 * @param string $block_content
+		 * @param string $name
 		 * @param string $value
 		 * @return string
 		 */
@@ -4016,7 +4035,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		 * @param string $tag_name
 		 * @return string
 		 */
-		private function get_element_inner_html( $content, $tag_name ) {
+		public function get_element_inner_html( $content, $tag_name ) {
 			$processor = new class( $content ) extends \WP_HTML_Tag_Processor {
 				public function get_inner_html( $tag_name ) {
 					$this->set_bookmark( 'open' );
@@ -4117,6 +4136,64 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			}
 
 			return $value;
+		}
+
+		/**
+		 * Sanitize post data
+		 *
+		 * @param array $data
+		 * @return array
+		 */
+		public function sanitize_post_data( $data ) {
+			if ( empty( $data['post_content'] ) ) {
+				return $data;
+			}
+
+			if ( ! $this->user_can_edit_css() ) {
+				$blocks = parse_blocks( wp_unslash( $data['post_content'] ) );
+
+				// Strip custom css from blocks.
+				$modified = false;
+				$blocks   = $this->remove_custom_css_from_blocks( $blocks, $modified );
+
+				if ( $modified ) {
+					$data['post_content'] = wp_slash( serialize_blocks( $blocks ) );
+				}
+			}
+
+			return $data;
+		}
+
+		/**
+		 * Remove custom css if any
+		 *
+		 * @param array   $blocks
+		 * @param boolean $modified
+		 * @return array
+		 */
+		private function remove_custom_css_from_blocks( $blocks, &$modified = false ) {
+			foreach ( $blocks as &$block ) {
+				if ( ! empty( $block['attrs']['boldblocks']['customCSS']['value'] ) ) {
+					$block['attrs']['boldblocks']['customCSS']['value'] = '';
+					$modified = true;
+				}
+
+				// Recursive for inner blocks.
+				if ( ! empty( $block['innerBlocks'] ) ) {
+					$block['innerBlocks'] = $this->remove_custom_css_from_blocks( $block['innerBlocks'], $modified );
+				}
+			}
+
+			return $blocks;
+		}
+
+		/**
+		 * If the current user can edit css
+		 *
+		 * @return boolean
+		 */
+		public function user_can_edit_css() {
+			return apply_filters( 'cbb_user_can_edit_css', current_user_can( 'manage_options' ) );
 		}
 
 		/**

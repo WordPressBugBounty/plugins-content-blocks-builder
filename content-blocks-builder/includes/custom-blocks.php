@@ -96,6 +96,8 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 
 		/**
 		 * Constructor
+		 *
+		 * @param ContentBlocksBuilder $the_plugin_instance
 		 */
 		public function __construct( $the_plugin_instance ) {
 			parent::__construct( $the_plugin_instance );
@@ -1232,6 +1234,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 				'variations'     => $this->the_plugin_instance->get_component( Variations::class )->get_all_variations(),
 				'variationNonce' => wp_create_nonce( 'cbb_variation_nonce' ),
 				'animations'     => $this->get_animated_blocks(),
+				'canEditCSS'     => $this->the_plugin_instance->get_component( CustomStyle::class )->user_can_edit_css(),
 			];
 
 			// Get block name for current variation.

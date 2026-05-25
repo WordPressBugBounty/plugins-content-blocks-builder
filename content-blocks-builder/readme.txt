@@ -5,7 +5,7 @@ Tags:              blocks, Gutenberg, carousel, grid, popup
 Requires PHP:      8.0
 Requires at least: 6.9
 Tested up to:      7.0
-Stable tag:        2.8.11
+Stable tag:        2.8.12
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -211,7 +211,7 @@ If this plugin is useful for you, please do a quick review and [rate it](https:/
 
 Please check out my other plugins if you're interested:
 
- - **[Meta Field Block](https://wordpress.org/plugins/display-a-meta-field-as-block)** - A block to display custom fields as blocks on the front end. It supports custom fields for posts, terms, users, and setting fields. It can also be used in the Query Loop block.
+ - **[Meta Field Block](https://wordpress.org/plugins/display-a-meta-field-as-block)** - A single block to display custom fields in the Block Editor without coding. It supports ACF, MetaBox, WooCommerce, meta, rest field, shortcode and more. Works everywhere: in the Site Editor (FSE), the Block Editor, inside Query Loop, WooCommerce Product Collection, Term Query blocks, and even in template files.
  - **[SVG Block](https://wordpress.org/plugins/svg-block)** - A block to display SVG images as blocks. Useful for images, icons, dividers, and buttons. It allows you to upload SVG images and load them into the icon library.
  - **[Icon separator](https://wordpress.org/plugins/icon-separator)** - A tiny block just like the core/separator block but with the ability to add an icon.
  - **[Breadcrumb Block](https://wordpress.org/plugins/breadcrumb-block)** - A simple breadcrumb trail block that supports JSON-LD structured data and is compatible with WooCommerce.
@@ -319,15 +319,13 @@ Learn more about this error: [Unexpected or Invalid Content](https://wordpress.o
 
 == Changelog ==
 
-= 2.8.11 =
-*Release Date - 05 May 2026*
+= 2.8.12 =
+*Release Date - 25 May 2026*
 
-* Added    - Support for core width and height in WordPress 7.0
-* Added    - Support for embeds (YouTube, Vimeo, TikTok, etc.) as background
-* Improved - Rearranged block toolbar button positions
-* Improved - Hid the Edit pattern button on the toolbar and the inspector settings of contentOnly blocks
-* Improved - Enhanced carousel pagination bullet styles
-* Improved - [CBB Pro] Added option to place carousel navigation buttons at the bottom center
-* Improved - [CBB Pro] Added option to change the position of the background video play/pause button
+* Improved - Carousel, toggle content, animations, and background effects now work correctly with dynamic content loaded through pagination, filtering, etc.
+* Fixed    - Modal preview did not work when the trigger selector used the >> format
+* Improved - Added visualizer to the padding, margin feature
+* Improved - Strip custom CSS inputted in the CBB Custom CSS editor before saving posts to the database when non-admin users save via the UI or REST API
+* Fixed    - Error when editing the HTML block in WordPress 7.0
 
 [View all changelog](https://contentblocksbuilder.com/changelog?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=Changelog)
