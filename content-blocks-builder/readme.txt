@@ -5,7 +5,7 @@ Tags:              blocks, Gutenberg, carousel, grid, popup
 Requires PHP:      8.0
 Requires at least: 6.9
 Tested up to:      7.0
-Stable tag:        2.8.12
+Stable tag:        2.8.13
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,11 @@ Learn more about this error: [Unexpected or Invalid Content](https://wordpress.o
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 2.8.13 =
+*Release Date - 25 May 2026*
+
+* Fixed - Modals were not closing when clicking the default close button
 
 = 2.8.12 =
 *Release Date - 25 May 2026*
