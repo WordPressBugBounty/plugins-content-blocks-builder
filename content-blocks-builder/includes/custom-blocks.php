@@ -752,6 +752,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 						'cbb'          => true,
 						'layout'       => true,
 						'migrateClass' => ! empty( $args['migrateClass'] ) ? ( isset( $args['id'] ) ? 'wp-block-boldblocks-custom' : 'wp-block-boldblocks-custom-parent' ) : '',
+						'CSSClasses'   => $args['className'] ?? '',
 					],
 					'uses_context' => [ 'postId', 'postType', 'cbb/block-overrides' ],
 				];
@@ -1404,7 +1405,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 
 					$block_name    = sprintf( 'boldblocks/%s', $this->sanitize_block_name( $item->post_name ) );
 					$block_version = get_post_meta( $item->ID, 'boldblocks_block_version', true );
-					$migrateClass  = version_compare( $block_version, '2.7.14', '<=' );
+					$migrate_class = version_compare( $block_version, '2.7.14', '<=' );
 
 					$block_args = [
 						'id'                    => $item->ID,
@@ -1423,7 +1424,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 						],
 						'enableVariationPicker' => (bool) get_post_meta( $item->ID, 'boldblocks_enable_variation_picker', true ),
 						'blockVersion'          => $block_version,
-						'migrateClass'          => $migrateClass,
+						'migrateClass'          => $migrate_class,
 						'dependentBlocks'       => get_post_meta( $item->ID, 'boldblocks_block_dependent_blocks', true ),
 						'hideOnFrontend'        => $hide_on_frontend,
 						'isTransformable'       => $is_transformable,
@@ -1469,7 +1470,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 							'hideOnFrontend'        => $hide_on_frontend,
 							'blockParent'           => $block_parent,
 							'blockAncestor'         => $block_ancestor,
-							'migrateClass'          => $migrateClass,
+							'migrateClass'          => $migrate_class,
 
 						];
 
@@ -1846,7 +1847,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 
 			if ( $block_instance->block_type->supports['cbb'] ?? false ) {
 				$GLOBALS['boldblocks_frontend_loaded'] = true;
-			} elseif ( $this->is_enqueue_frontend_script_for_non_cbb_blocks( $block, $block_instance ) ) {
+			} elseif ( $this->is_enqueue_frontend_script_for_animations( $block ) || $this->is_enqueue_frontend_script_for_sticky_blocks( $block ) ) {
 				wp_enqueue_script( $this->custom_blocks_frontend_handle );
 				wp_enqueue_style( $this->custom_blocks_handle );
 
@@ -1857,13 +1858,12 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 		}
 
 		/**
-		 * Whether to load the frontend scripts for non-cbb blocks.
+		 * Whether to load the frontend scripts for non-cbb sticky blocks.
 		 *
-		 * @param array    $block
-		 * @param WP_Block $block_instance
+		 * @param array $block
 		 * @return boolean
 		 */
-		private function is_enqueue_frontend_script_for_non_cbb_blocks( $block, $block_instance ) {
+		private function is_enqueue_frontend_script_for_sticky_blocks( $block ) {
 			$block_names = $this->the_plugin_instance->get_component( CustomStyle::class )->non_cbb_blocks;
 			if ( ! in_array( $block['blockName'] ?? '', $block_names, true ) ) {
 				return false;
@@ -1875,6 +1875,16 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 			}
 
 			return false;
+		}
+
+		/**
+		 * Whether to load the frontend scripts for non-cbb animation blocks.
+		 *
+		 * @param array $block
+		 * @return boolean
+		 */
+		private function is_enqueue_frontend_script_for_animations( $block ) {
+			return ! empty( $block['attrs']['boldblocks']['animations'] ) && in_array( $block['blockName'] ?? '', $this->get_animated_blocks(), true );
 		}
 
 		/**

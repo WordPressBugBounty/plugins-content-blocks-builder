@@ -132,8 +132,8 @@ if ( ! class_exists( CustomStyle::class ) ) :
 			// Render settings for carousels.
 			add_filter( 'render_block', [ $this, 'render_carousel_settings' ], 30, 3 );
 
-			// Migrate CBB class for old blocks.
-			add_filter( 'render_block', [ $this, 'migrate_cbb_class' ], 30, 3 );
+			// Handle migration css class and custom css.
+			add_filter( 'render_block', [ $this, 'manage_cbb_class' ], 30, 3 );
 
 			// Render steps block data.
 			add_filter( 'render_block_data', [ $this, 'render_steps_block_data' ], 10, 3 );
@@ -1988,7 +1988,7 @@ if ( ! class_exists( CustomStyle::class ) ) :
 						return $accumulator;
 					}
 
-					$delay           = $animation['delay'] ?? 0;
+					$delay           = empty( $animation['delay'] ) ? 0 : $animation['delay'];
 					$repeat          = $animation['repeat'] ?? 1;
 					$infinite        = $animation['infinite'] ?? false;
 					$timing_function = $animation['timingFunction'] ?? '';
@@ -3714,33 +3714,56 @@ if ( ! class_exists( CustomStyle::class ) ) :
 		}
 
 		/**
-		 * Migrate cbb class for old CBB blocks.
+		 * Manage css class: migrate old class and adding custom css class.
 		 *
 		 * @param string   $block_content
 		 * @param array    $block
 		 * @param WP_Block $block_instance
 		 * @return string
 		 */
-		public function migrate_cbb_class( $block_content, $block, $block_instance ) {
+		public function manage_cbb_class( $block_content, $block, $block_instance ) {
 			// Ignore admin side or empty content.
 			if ( is_admin() || ! $block_content ) {
 				return $block_content;
 			}
 
-			// There is no need to migrate.
-			$migrate_cbb_class = $block_instance->block_type->supports['migrateClass'] ?? '';
-			if ( ! $migrate_cbb_class ) {
+			// Bail if it is not a CBB block.
+			if ( empty( $block_instance->block_type->supports['cbb'] ?? '' ) ) {
 				return $block_content;
 			}
 
-			// Replace the class.
-			$block_reader = new \WP_HTML_Tag_Processor( $block_content );
-			if ( $block_reader->next_tag( [ 'class_name' => $migrate_cbb_class ] ) ) {
-				$new_class = str_ends_with( $migrate_cbb_class, 'custom' ) ? 'cbb-block' : 'cbb-block-parent';
-				$block_reader->set_attribute( 'class', str_replace( $migrate_cbb_class, $new_class, $block_reader->get_attribute( 'class' ) ) );
+			// Get custom classes.
+			$css_classes = trim( $block_instance->block_type->supports['CSSClasses'] ?? '' );
+
+			// Get migrate class.
+			$migrate_class = trim( $block_instance->block_type->supports['migrateClass'] ?? '' );
+
+			// Bail if we don't need to process.
+			if ( ! $css_classes && ! $migrate_class ) {
+				return $block_content;
+			}
+
+			// Initialize the HTML Tag Processor.
+			$p = new \WP_HTML_Tag_Processor( $block_content );
+
+			// Target only the very first outer wrapping element.
+			if ( $p->next_tag() ) {
+				if ( $migrate_class ) {
+					$p->remove_class( $migrate_class );
+					$p->add_class( str_ends_with( $migrate_class, 'custom' ) ? 'cbb-block' : 'cbb-block-parent' );
+				}
+
+				if ( $css_classes ) {
+					// Explode by space in case multiple custom classes are supplied.
+					foreach ( explode( ' ', $css_classes ) as $single_class ) {
+						if ( ! empty( $single_class ) ) {
+							$p->add_class( $single_class );
+						}
+					}
+				}
 
 				// Render the updated HTML.
-				return $block_reader->get_updated_html();
+				return $p->get_updated_html();
 			}
 
 			return $block_content;

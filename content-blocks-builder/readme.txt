@@ -4,8 +4,8 @@ Donate link:       https://contentblocksbuilder.com?utm_source=wp.org&utm_campai
 Tags:              blocks, Gutenberg, carousel, grid, popup
 Requires PHP:      8.0
 Requires at least: 6.9
-Tested up to:      7.0
-Stable tag:        2.8.13
+Tested up to:      7.1
+Stable tag:        2.8.14
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -319,18 +319,16 @@ Learn more about this error: [Unexpected or Invalid Content](https://wordpress.o
 
 == Changelog ==
 
-= 2.8.13 =
-*Release Date - 25 May 2026*
+= 2.8.14 =
+*Release Date - 05 August 2026*
 
-* Fixed - Modals were not closing when clicking the default close button
-
-= 2.8.12 =
-*Release Date - 25 May 2026*
-
-* Improved - Carousel, toggle content, animations, and background effects now work correctly with dynamic content loaded through pagination, filtering, etc.
-* Fixed    - Modal preview did not work when the trigger selector used the >> format
-* Improved - Added visualizer to the padding, margin feature
-* Improved - Strip custom CSS inputted in the CBB Custom CSS editor before saving posts to the database when non-admin users save via the UI or REST API
-* Fixed    - Error when editing the HTML block in WordPress 7.0
+* Fixed    - Removed the preview style for the HTML block wrapper, as preview styles no longer work in the Editor since WordPress 7.0
+* Improved - Renamed CSS variables containing border-color to avoid conflicts with WordPress 7.0
+* Improved - Allowed custom CSS classes to be changed after a block is defined without triggering a deprecation warning
+* Added    - Added nav as a new semantic tag option for CBB blocks
+* Fixed    - Enqueued scripts and styles for core blocks that use entrance animations
+* Fixed    - Handled empty values for the animation delay setting
+* Fixed    - Fixed an issue where the animation preview was not updated when changing animation settings
+* Changed  - Renamed the "Reveal animations" label to "Entrance animations"
 
 [View all changelog](https://contentblocksbuilder.com/changelog?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=Changelog)
