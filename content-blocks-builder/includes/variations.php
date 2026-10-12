@@ -53,7 +53,9 @@ if ( ! class_exists( Variations::class ) ) :
 		private $variation_style_array = [];
 
 		/**
-		 * Constructor
+		 * The constructor
+		 *
+		 * @param ContentBlocksBuilder $the_plugin_instance
 		 */
 		public function __construct( $the_plugin_instance ) {
 			parent::__construct( $the_plugin_instance );

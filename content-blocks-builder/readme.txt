@@ -5,7 +5,7 @@ Tags:              blocks, Gutenberg, carousel, grid, popup
 Requires PHP:      8.0
 Requires at least: 6.9
 Tested up to:      7.1
-Stable tag:        2.8.14
+Stable tag:        2.8.15
 License:           GPL-3.0
 License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -319,16 +319,13 @@ Learn more about this error: [Unexpected or Invalid Content](https://wordpress.o
 
 == Changelog ==
 
-= 2.8.14 =
-*Release Date - 05 August 2026*
+= 2.8.15 =
+*Release Date - 12 October 2026*
 
-* Fixed    - Removed the preview style for the HTML block wrapper, as preview styles no longer work in the Editor since WordPress 7.0
-* Improved - Renamed CSS variables containing border-color to avoid conflicts with WordPress 7.0
-* Improved - Allowed custom CSS classes to be changed after a block is defined without triggering a deprecation warning
-* Added    - Added nav as a new semantic tag option for CBB blocks
-* Fixed    - Enqueued scripts and styles for core blocks that use entrance animations
-* Fixed    - Handled empty values for the animation delay setting
-* Fixed    - Fixed an issue where the animation preview was not updated when changing animation settings
-* Changed  - Renamed the "Reveal animations" label to "Entrance animations"
+* Improved - When copying a post, copy its parent as well if it is a hierarchical post type
+* Improved - Allowed carousel's entrance animations running on the free version
+* Improved - Allowed premium background effects running on the free version
+* Improved - Bundled esprima-next with CBB as the default parser for JS code in the custom code editor
+* Improved - Updated Freemius SDK
 
 [View all changelog](https://contentblocksbuilder.com/changelog?utm_source=wp.org&utm_campaign=readme&utm_medium=link&utm_content=Changelog)

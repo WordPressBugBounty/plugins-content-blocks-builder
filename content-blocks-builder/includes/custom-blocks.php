@@ -1186,7 +1186,7 @@ if ( ! class_exists( CustomBlocks::class ) ) :
 		 */
 		public function adjust_esprima_script( $src, $handle ) {
 			if ( 'esprima' === $handle ) {
-				$src = 'https://cdn.jsdelivr.net/npm/esprima-next@5.8.4/dist/esprima.js';
+				$src = $this->the_plugin_instance->get_file_uri( 'includes/assets/esprima-next/esprima.js' );
 			}
 
 			return $src;

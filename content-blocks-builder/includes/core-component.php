@@ -25,7 +25,9 @@ if ( ! class_exists( CoreComponent::class ) ) :
 		protected $the_plugin_instance;
 
 		/**
-		 * A constructor
+		 * The constructor
+		 *
+		 * @param ContentBlocksBuilder $the_plugin_instance
 		 */
 		public function __construct( $the_plugin_instance ) {
 			$this->the_plugin_instance = $the_plugin_instance;

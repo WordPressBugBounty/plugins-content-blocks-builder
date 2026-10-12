@@ -46,7 +46,9 @@ if ( ! class_exists( Patterns::class ) ) :
 		protected $max_items = 200;
 
 		/**
-		 * Constructor
+		 * The constructor
+		 *
+		 * @param ContentBlocksBuilder $the_plugin_instance
 		 */
 		public function __construct( $the_plugin_instance ) {
 			parent::__construct( $the_plugin_instance );

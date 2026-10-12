@@ -175,6 +175,7 @@ if ( ! class_exists( CopyPost::class ) ) :
 				'post_status'  => 'draft',
 				'post_type'    => $post->post_type,
 				'menu_order'   => $post->menu_order,
+				'post_parent'  => $post->post_parent,
 			);
 
 			// Insert the post.
@@ -385,7 +386,7 @@ if ( ! class_exists( CopyPost::class ) ) :
 		 * @return array
 		 */
 		private function get_supported_post_types() {
-			/// Get all public post types.
+			// Get all public post types.
 			$public_types = array_keys( get_post_types( [ 'public' => true ] ) );
 
 			/**
